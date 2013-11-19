@@ -206,6 +206,7 @@ abstract class BaseModel
         
         $fields =array();
         $values= array();
+        $values_execute=array();
         $flag=0;
   
      $sql ="INSERT INTO ".$this->getTable_name()." (";
@@ -242,7 +243,7 @@ abstract class BaseModel
      try
      {
       $this->db->beginTransaction();
-      $insert->execute($value);
+      $insert->execute($values);
       $this->db->commit();
       $insert->closeCursor();
       
@@ -266,8 +267,14 @@ abstract class BaseModel
         {
             updateFields($this->getPrimary_Key(),$data);
         }
-           insert($data);  
+           insertData($data);  
     }
+    
+    /**
+     * 
+     * @return type
+     */
+    
     public function getDb() {
         return $this->db;
     }
