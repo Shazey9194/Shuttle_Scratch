@@ -20,7 +20,14 @@ class Router
      */
     private $request;
 
+    /**
+     * 
+     * @var string base_url
+     */
+    static public $base_url;
+
     function __construct($base_url) {
+		self::$base_url = 'http://localhost/Shuttle_Scratch/';
         $this->request = str_replace($base_url, '', $_SERVER['REQUEST_URI']);
         $this->mapRoutes();
     }

@@ -6,9 +6,9 @@
         <title>{{ title }}</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="asset/css/bootstrap.min.css">
-        <link rel="stylesheet" href="asset/css/font-awesome.fix.min.css">
-        <link rel="stylesheet" href="asset/css/shuttle-theme.css">
+        <link rel="stylesheet" href="{{ base_url() }}asset/css/bootstrap.min.css">
+        <link rel="stylesheet" href="{{ base_url() }}asset/css/font-awesome.fix.min.css">
+        <link rel="stylesheet" href="{{ base_url() }}asset/css/shuttle-theme.css">
     </head>
     <body>
         
@@ -20,12 +20,12 @@
                         <span class="sr-only">Afficher la navigation</span>
                         <span class="fa-reorder"></span>
                     </button>
-                    <a class="navbar-brand" href="dashboard"><i class="fa-rocket"></i>&nbsp;Shuttle</a>
+                    <a class="navbar-brand" href="{{ base_url() }}dashboard"><i class="fa-rocket"></i>&nbsp;Shuttle</a>
                 </div>
                 <div class="collapse navbar-collapse" id="navigation">
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#"><i class="fa-wrench"></i>&nbsp;Préférences</a></li>
-                        <li><a href="logout"><i class="fa-sign-out"></i>&nbsp;Quitter</a></li>
+                        <li><a href="{{ base_url() }}settings"><i class="fa-wrench"></i>&nbsp;Préférences</a></li>
+                        <li><a href="{{ base_url() }}logout"><i class="fa-sign-out"></i>&nbsp;Quitter</a></li>
                     </ul>
                 </div>
             </div>
@@ -38,13 +38,13 @@
                 <div class="row">
                     <div class="col-md-8">
                         <ul>
-                            <li{% if navtab == 'overview' %} class="active"{% endif %}><a href="dashboard"><i class="fa-eye"></i>Accueil</a></li>
-                            <li{% if navtab == 'history' %} class="active"{% endif %}><a href="history"><i class="fa-clock-o"></i>Historique</a></li>
-                            <li{% if navtab == 'tickets' %} class="active"{% endif %}><a href="tickets"><i class="fa-ticket"></i>Tickets</a></li>
-                            <li{% if navtab == 'projects' %} class="active"{% endif %}><a href="projects"><i class="fa-folder-o"></i>Projets</a></li>
-                            <li{% if navtab == 'users' %} class="active"{% endif %}><a href="users"><i class="fa-group"></i>Utilisateurs</a></li>
-                            <li{% if navtab == 'stats' %} class="active"{% endif %}><a href="stats"><i class="fa-bar-chart-o"></i>Statistiques</a></li>
-                            <li{% if navtab == 'new' %} class="active"{% endif %}><a href="ticket/new"><i class="fa-plus-circle"></i>Nouveau ticket</a></li>
+                            <li{% if navtab == 'overview' %} class="active"{% endif %}><a href="{{ base_url() }}dashboard"><i class="fa-eye"></i>Accueil</a></li>
+                            <li{% if navtab == 'history' %} class="active"{% endif %}><a href="{{ base_url() }}history"><i class="fa-clock-o"></i>Historique</a></li>
+                            <li{% if navtab == 'tickets' %} class="active"{% endif %}><a href="{{ base_url() }}tickets"><i class="fa-ticket"></i>Tickets</a></li>
+                            <li{% if navtab == 'projects' %} class="active"{% endif %}><a href="{{ base_url() }}projects"><i class="fa-folder-o"></i>Projets</a></li>
+                            <li{% if navtab == 'users' %} class="active"{% endif %}><a href="{{ base_url() }}users"><i class="fa-group"></i>Utilisateurs</a></li>
+                            <li{% if navtab == 'stats' %} class="active"{% endif %}><a href="{{ base_url() }}stats"><i class="fa-bar-chart-o"></i>Statistiques</a></li>
+                            <li{% if navtab == 'new' %} class="active"{% endif %}><a href="{{ base_url() }}tickets/create"><i class="fa-plus-circle"></i>Nouveau ticket</a></li>
                         </ul>
                     </div>
                     <div class="col-md-4">
@@ -118,9 +118,8 @@
                         <ul>
                             <li class="list-title">A propos</li>
                             <li><a href="#">Mentions légales</a></li>
-                            <li><a href="#">Fork on Github</a></li>
                             <li><a href="http://getbootstrap.com/" target="_blank">Bootstrap 3</a></li>
-                            <li><a href="#">Font Awesome</a></li>
+                            <li><a href="http://fontawesome.io/">Font Awesome</a></li>
                         </ul>
                     </div>
                     <div class="col-md-offset-2 col-md-4">
@@ -133,8 +132,8 @@
         {% endblock %}
 
         {% block scripts %}
-        <script src="asset/js/jquery.min.js"></script>
-        <script src="asset/js/bootstrap.min.js"></script>
+        <script src="{{ base_url() }}asset/js/jquery.min.js"></script>
+        <script src="{{ base_url() }}asset/js/bootstrap.min.js"></script>
         {% endblock %}
         </body>
     </html>

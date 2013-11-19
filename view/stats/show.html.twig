@@ -1,0 +1,14 @@
+{% extends "stats/overview.html.twig" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <section class="well">
+                <h3>#{{ stats.idStats }}&nbsp;{{ stats.title }}</h3>
+                <p>{{ stats.content }}</p>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}
