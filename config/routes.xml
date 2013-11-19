@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <routes>
-
-    <route pattern="login" controller="user" action="login"/>
-    <route pattern="user" controller="user" action="index"/>
-    <route pattern="user/add" controller="user" action="add"/>
-    <route pattern="user/(\d+)/show" controller="user" action="show" params="id" />
-    <route pattern="user/(\d+)/edit" controller="user" action="edit" params="id" />
-    <route pattern="user/(\d+)/delete" controller="user" action="delete" params="id" />
-    
+	<route pattern="login" controller="user" action="login"/>
+	<route pattern="users" controller="user" action="index"/>
+	<route pattern="users/add" controller="user" action="add"/>
+	<route pattern="users/(\d+)/show" controller="user" action="show" params="id" />
+	<route pattern="users/(\d+)/edit" controller="user" action="edit" params="id" />
+	<route pattern="users/(\d+)/delete" controller="user" action="delete" params="id" />
+	<route pattern="" controller="dashboard" action="index" params="id" />
+	<route pattern="dashboard" controller="dashboard" action="index"/>
+	<route pattern="company" controller="company" action="index"/>
+	<route pattern="company/add" controller="company" action="add"/>
+	<route pattern="company/(\d+)/show" controller="company" action="show" params="id" />
+	<route pattern="company/(\d+)/edit" controller="company" action="edit" params="id" />
+	<route pattern="company/(\d+)/delete" controller="company" action="delete" params="id" />
+	<route pattern="tickets" controller="tickets" action="index"/>
+	<route pattern="tickets/add" controller="tickets" action="add"/>
+	<route pattern="tickets/create" controller="tickets" action="create"/>
+	<route pattern="tickets/(\d+)/show" controller="tickets" action="show" params="id" />
+	<route pattern="tickets/(\d+)/edit" controller="tickets" action="edit" params="id" />
+	<route pattern="tickets/(\d+)/delete" controller="tickets" action="delete" params="id" />
+	<route pattern="history" controller="history" action="index"/>
+	<route pattern="history/add" controller="history" action="add"/>
+	<route pattern="history/(\d+)/show" controller="history" action="show" params="id" />
+	<route pattern="projects" controller="projects" action="index"/>
+	<route pattern="projects/add" controller="projects" action="add"/>
+	<route pattern="projects/create" controller="projects" action="create"/>
+	<route pattern="projects/(\d+)/show" controller="projects" action="show" params="id" />
+	<route pattern="projects/(\d+)/edit" controller="projects" action="edit" params="id" />
+	<route pattern="projects/(\d+)/delete" controller="projects" action="delete" params="id" />
+	<route pattern="stats" controller="stats" action="index"/>
+	<route pattern="stats/(\d+)/show" controller="stats" action="show" params="id" />
+	<route pattern="settings" controller="settings" action="index" params="id" />
 </routes>

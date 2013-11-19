@@ -1,0 +1,14 @@
+{% extends "history/overview.html.twig" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <section class="well">
+                <h3>#{{ history.idHistory }}&nbsp;{{ history.title }}</h3>
+                <p>{{ history.content }}</p>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}
