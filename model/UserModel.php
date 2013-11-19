@@ -1,4 +1,6 @@
-<?php require_once './model/BaseModel.php';
+<?php
+
+require_once './model/BaseModel.php';
 
 /**
  * The user model
@@ -7,8 +9,9 @@
  */
 class UserModel extends BaseModel
 {
+
     function __construct() {
         parent::__construct('user', 'idUser');
     }
-    
+
 }

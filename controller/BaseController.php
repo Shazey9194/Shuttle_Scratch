@@ -1,4 +1,6 @@
-<?php require_once './library/Twig/Autoloader.php';
+<?php
+
+require_once './vendor/twig/Autoloader.php';
 
 /**
  * The base controller
@@ -9,11 +11,20 @@ abstract class BaseController
 {
 
     /**
+     *
+     * @var \Twig_Environment The twig environment
+     */
+    protected $twig;
+
+
+    /**
      * Construct
      * 
      */
     function __construct() {
         Twig_Autoloader::register();
+        $loader = new Twig_Loader_Filesystem('./view');
+        $this->twig = new Twig_Environment($loader, array('cache' => './cache/twig'));
     }
 
     /**
