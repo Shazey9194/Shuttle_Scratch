@@ -16,7 +16,6 @@ abstract class BaseController
      */
     protected $twig;
 
-
     /**
      * Construct
      * 
@@ -25,6 +24,15 @@ abstract class BaseController
         Twig_Autoloader::register();
         $loader = new Twig_Loader_Filesystem('./view');
         $this->twig = new Twig_Environment($loader, array('cache' => './cache/twig'));
+
+        $set_value = new Twig_SimpleFunction('set_value', function ($name, $value, $default = null) {
+                    if (isset($_POST[$name]) and $_POST[$name] == $value) {
+                        echo 'value="' . $_POST[$name] . '"';
+                    } elseif (!is_null($default)) {
+                        echo 'value="' . $default . '"';
+                    }
+                });
+        $this->twig->addFunction($set_value);
     }
 
     /**
