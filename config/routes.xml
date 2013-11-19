@@ -7,5 +7,5 @@
     <route pattern="user/(\d+)/show" controller="user" action="show" params="id" />
     <route pattern="user/(\d+)/edit" controller="user" action="edit" params="id" />
     <route pattern="user/(\d+)/delete" controller="user" action="delete" params="id" />
-
+    
 </routes>

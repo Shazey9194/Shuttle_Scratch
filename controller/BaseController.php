@@ -15,7 +15,7 @@ abstract class BaseController
      * @var \Twig_Environment The twig environment
      */
     protected $twig;
-
+    
     /**
      * Construct
      * 
