@@ -125,7 +125,7 @@ abstract class BaseModel
      * @param type $id
      */
     
-    public function deleteByid($id) {
+    public function deleteById($id) {
         $sql="DELETE FROM ".$this->getTable_name()." WHERE".$this->getPrimary_Key()."= :id";
         try{
             $delete_sql = $this->db->prepare($sql);
@@ -148,26 +148,126 @@ abstract class BaseModel
      * @param type $data
      */
     
-    public function UpdateFields($id,$data) {
+    public function updateFields($id,$data) {
+        $flag =0;
+        $array_values_update=array();
+        $array_execute=array();
+        $i=1;
+        $j=1;
         try {
-            foreach ($data as $field => $value) 
+            
+         $sql = "UPDATE ".$this->getTable_name()." SET ";
+
+        foreach ($data as $field => $value) 
          {
-          $sql = "UPDATE ".$this->getTable_name()." SET ".$field."= :value WHERE ".$this->getPrimary_Key()."= :id";
+            if($flag ==0)
+            {
+            $sql.=' '.$field.' = :value'.$i;
+            $flag =1;
+            }
+            else
+            {
+            $sql.=' '.', '.$field.' = :value'.$i;
+            }
+            
+            array_push($array_values_update,$value);
+            $i++;
+         }
+         
+          $sql.=$this->getPrimary_Key().' = :id';
+          
+          foreach ($array_values_update as $values) {
+              array_push($array_execute,array(':values'.$j=>$values));
+              $j++;
+          }
+          
+          array_push($array_execute,array(':id'=>$id));
+          
           $update = $this->db->prepare($sql);
           $this->db->beginTransaction();
-          $update->execute(array(':value'=>$value,':id'=>$id));
+          $update->execute($array_execute);
           $this->db->commit();
           $update->closeCursor();
-          
           print "Modification(s) enregistrée(s)";
-         }
          
         } catch (Exception $ex) {
             $this->db->rollBack();
             print "ERROR ! :".$ex->getMessage();
         }
+        
     }
     
+    /**
+     * 
+     * @param type $data
+     */
+    
+    public function insertData($data) {
+        
+        $fields =array();
+        $values= array();
+        $flag=0;
+  
+     $sql ="INSERT INTO ".$this->getTable_name()." (";
+     
+     foreach ($data as $field =>$values) {
+         
+      array_push($fields,$field);
+      array_push($values,$value);
+           
+     }
+     
+     foreach ($fields as $field) {
+         
+         if($flag==0)
+         {
+         $sql.=$field;
+         $flag=1;
+         }
+         $sql.=", ".$field;
+     }
+     
+     $sql.=")";
+     
+     $sql.=" VALUES (";
+     foreach ($values as $value){
+         $sql.='?,';
+         if(end($values))
+         {
+             $sql.='?)';
+         }
+     }
+     
+     $insert = $this->db->prepare($sql);
+     try
+     {
+      $this->db->beginTransaction();
+      $insert->execute($value);
+      $this->db->commit();
+      $insert->closeCursor();
+      
+      print "Inscription enregistrée ";
+      
+         
+     } catch (Exception $ex) {
+         $this->db->rollBack();
+         print "ERROR ! : ".$ex->getMessage();
+     }
+    }
+    
+    /**
+     * 
+     * @param type $data
+     */
+    
+    public function save($data) {
+        
+        if(array_key_exists($this->getPrimary_Key(), $data))
+        {
+            updateFields($this->getPrimary_Key(),$data);
+        }
+           insert($data);  
+    }
     public function getDb() {
         return $this->db;
     }
