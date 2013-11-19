@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <routes>
 
+    <route pattern="login" controller="user" action="login"/>
     <route pattern="user" controller="user" action="index"/>
     <route pattern="user/add" controller="user" action="add"/>
     <route pattern="user/(\d+)/show" controller="user" action="show" params="id" />

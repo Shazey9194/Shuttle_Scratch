@@ -1,4 +1,6 @@
-<?php require_once './Controller/BaseController.php';
+<?php
+
+require_once './Controller/BaseController.php';
 
 /**
  * The user controller
@@ -7,6 +9,7 @@
  */
 class User extends BaseController
 {
+
     /**
      * Construct
      * 
@@ -22,13 +25,13 @@ class User extends BaseController
     public function index() {
         
     }
-    
+
     /**
      * The user login action
      * 
      */
     public function login() {
-        
+        $this->twig->display('user/login.html.twig');
     }
 
     /**
