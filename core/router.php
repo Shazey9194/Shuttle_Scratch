@@ -1,9 +1,9 @@
 <?php
 
 /**
- * The router class
+ * The router core
  * 
- * @author Fabien Morchoinse <f.morchoisne@insta.fr>
+ * @author Fabien Morchoisne <f.morchoisne@insta.fr>
  */
 class Router
 {
@@ -15,7 +15,7 @@ class Router
     private $routes = array();
 
     /**
-     *
+     * 
      * @var string The request uri
      */
     private $request;
@@ -111,9 +111,9 @@ class Router
 }
 
 /**
- * The route class
+ * The route core
  * 
- * @author Fabien Morchoinse <f.morchoisne@insta.fr>
+ * @author Fabien Morchoisne <f.morchoisne@insta.fr>
  */
 class Route
 {

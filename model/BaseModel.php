@@ -1,47 +1,52 @@
 <?php
 
+/**
+ * The base model
+ * 
+ * @author Fabien Morchoisne <f.morchoisne@insta.fr>
+ */
 abstract class BaseModel
 {
 
     /**
-     * @var PDO The PDO instance
      * 
+     * @var PDO The PDO instance
      */
     protected $db;
 
     /**
-     * @var string The DB host name
      * 
+     * @var string The DB host name
      */
     protected $host;
 
     /**
+     * 
      * @var string The DB name
-     *
      */
     protected $database;
 
     /**
+     * 
      * @var string The DB user
-     *
      */
     protected $user;
 
     /**
-     * @var string The DB password
      * 
+     * @var string The DB password
      */
     protected $password;
 
     /**
-     * @var string The DB table name
      * 
+     * @var string The DB table name
      */
     protected $table_name;
 
     /**
-     * @var string The primary key field name 
      * 
+     * @var string The primary key field name
      */
     protected $primary_Key;
 
@@ -49,22 +54,31 @@ abstract class BaseModel
      * Construct
      * 
      */
-    function __construct() {
+    function __construct($table_name, $primary_Key) {
+        
         $this->setHost('localhost');
         $this->setUser('root');
         $this->setPassword('');
         $this->setDatabase('shuttle');
-
+        $this->setTable_name($table_name);
+        $this->setPrimary_Key($primary_Key);
         $this->init();
     }
 
     /**
      * Initialise PDO
+     * 
      */
     public function init() {
+
         $this->db = new PDO('mysql:host=' . $this->getHost() . ';dbname=' . $this->getDatabase(), $this->getUser(), $this->getPassword());
         $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->db->exec("SET NAMES 'UTF8'");
+    }
+
+    public function close() {
+
+        $this->db = NULL;
     }
 
     /**

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <routes>
-  <route pattern="accueil" controller="user" action="index" />
-  <route pattern="user/(\d+)/edit" controller="user" action="edit" params="id" />
-  <route pattern="article/(\d+)-(.+)/page-(\d+)" controller="article" action="read" params="id,title,page" />
+
+    <route pattern="user" controller="user" action="index"/>
+    <route pattern="user/add" controller="user" action="add"/>
+    <route pattern="user/(\d+)/show" controller="user" action="show" params="id" />
+    <route pattern="user/(\d+)/edit" controller="user" action="edit" params="id" />
+    <route pattern="user/(\d+)/delete" controller="user" action="delete" params="id" />
+
 </routes>
