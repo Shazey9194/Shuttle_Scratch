@@ -160,14 +160,14 @@ abstract class BaseModel
 
         foreach ($data as $field => $value) 
          {
-            if($flag ==0)
+            if($flag==0)
             {
-            $sql.=$field.'= :value'.$i;
+            $sql.=$field.'='.' :value'.$i;
             $flag =1;
             }
             else
             {
-            $sql.=', '.$field.'= :value'.$i;
+            $sql.=', '.$field.'='.' :value'.$i;
             }
             
             array_push($array_values_update,$value);
@@ -206,7 +206,6 @@ abstract class BaseModel
         
         $fields =array();
         $values= array();
-        $values_execute=array();
         $flag=0;
   
      $sql ="INSERT INTO ".$this->getTable_name()." (";
@@ -225,18 +224,27 @@ abstract class BaseModel
          $sql.=$field;
          $flag=1;
          }
+         else
+         {
          $sql.=", ".$field;
+         }
      }
      
      $sql.=")";
      
      $sql.=" VALUES (";
+     
+     reset($values);
      foreach ($values as $value){
-         $sql.='?,';
-         if(end($values))
+         
+         if(key($values)!= 0)
          {
-             $sql.='?)';
+         $sql.='?,';             
+         }else
+         {
+           $sql.='?)';
          }
+         next($values);
      }
      
      $insert = $this->db->prepare($sql);
