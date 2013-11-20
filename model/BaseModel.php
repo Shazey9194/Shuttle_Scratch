@@ -134,7 +134,7 @@ abstract class BaseModel
             $this->db->commit();
             $delete_sql->closeCursor();
             
-            print 'Suppréssion effectué';
+            print 'Suppréssion effectuée';
             
         } catch (Exception $ex) {
             $this->db->rollBack();
@@ -162,19 +162,19 @@ abstract class BaseModel
          {
             if($flag ==0)
             {
-            $sql.=' '.$field.' = :value'.$i;
+            $sql.=$field.'= :value'.$i;
             $flag =1;
             }
             else
             {
-            $sql.=' '.', '.$field.' = :value'.$i;
+            $sql.=', '.$field.'= :value'.$i;
             }
             
             array_push($array_values_update,$value);
             $i++;
          }
          
-          $sql.=$this->getPrimary_Key().' = :id';
+          $sql.=' WHERE '.$this->getPrimary_Key().'= :id';
           
           foreach ($array_values_update as $values) {
               array_push($array_execute,array(':values'.$j=>$values));
@@ -211,7 +211,7 @@ abstract class BaseModel
   
      $sql ="INSERT INTO ".$this->getTable_name()." (";
      
-     foreach ($data as $field =>$values) {
+     foreach ($data as $field =>$value) {
          
       array_push($fields,$field);
       array_push($values,$value);
