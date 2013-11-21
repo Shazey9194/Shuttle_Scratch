@@ -15,45 +15,18 @@ abstract class BaseController
      * @var \Twig_Environment The twig environment
      */
     protected $twig;
-    
+
     /**
      * Construct
      * 
      */
-    function __construct() {
+    protected function __construct() {
         Twig_Autoloader::register();
         $loader = new Twig_Loader_Filesystem('./view');
         $this->twig = new Twig_Environment($loader);
 
-        $set_value = new Twig_SimpleFunction('set_value', function ($name, $default = null) {
-                    if (isset($_POST[$name])) {
-                        echo 'value="' . $_POST[$name] . '"';
-                    } elseif (!is_null($default)) {
-                        echo 'value="' . $default . '"';
-                    }
-                });
-        $this->twig->addFunction($set_value);
-		
-		$base_url = new Twig_SimpleFunction('base_url', function () {
-                    return Router::$base_url;
-                });
-        $this->twig->addFunction($base_url);
-		
-		$form_error = new Twig_SimpleFunction('form_error', function () {
-                    return false;
-                });
-		$this->twig->addFunction($form_error);
-		
-		$set_select = new Twig_SimpleFunction('set_select', function(){
-			return FALSE;
-		});
-		$this->twig->addFunction($set_select);
-		
-		$isGranted= new Twig_SimpleFunction('isGranted', function(){
-			return FALSE;
-		});
-		$this->twig->addFunction($isGranted);
-	}
+        $this->extend();
+    }
 
     /**
      * The controller index
@@ -87,4 +60,57 @@ abstract class BaseController
      * @param int $id The entity id
      */
     abstract public function delete($id);
+
+    /**
+     * 
+     * @return void
+     */
+    private function extend() {
+        $functions[] = new Twig_SimpleFunction('setValue', function ($input, $default = null) {
+                    if (isset($_POST[$input])) {
+                        echo 'value="' . $_POST[$input] . '"';
+                    } elseif (!is_null($default)) {
+                        echo 'value="' . $default . '"';
+                    }
+                });
+
+        $functions[] = new Twig_SimpleFunction('domain', function () {
+                    echo 'http://' . $_SERVER['SERVER_NAME'] . '/';
+                });
+
+        $functions[] = new Twig_SimpleFunction('formError', function ($field, $html = true) {
+                    if (class_exists('Validator')) {
+                        $validator = Validator::getInstance();
+                        if (($message = $validator->getError($field)) != FALSE) {
+                            if ($html) {
+                                echo '<div class="input-error">' . $message . '</div>';
+                            } else {
+                                echo $message;
+                            }
+                        }
+                    }
+                });
+                
+        $functions[] = new Twig_SimpleFunction('hasError', function ($field) {
+                    if (class_exists('Validator')) {
+                        $validator = Validator::getInstance();
+                        return $validator->hasError($field);
+                    }
+                });
+
+        $functions[] = new Twig_SimpleFunction('set_select', function($select, $value, $default = false) {
+                    if ((isset($_POST[$select]) and $_POST[$select] == $value) or $default) {
+                        echo 'selected="selected"';
+                    }
+                });
+
+        $functions[] = new Twig_SimpleFunction('isGranted', function() {
+                    return FALSE;
+                });
+
+        foreach ($functions as $function) {
+            $this->twig->addFunction($function);
+        }
+    }
+
 }

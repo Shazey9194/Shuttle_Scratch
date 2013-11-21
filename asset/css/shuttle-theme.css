@@ -452,7 +452,7 @@ body > footer a:hover {
     margin-top: 12px;
     background: rgba(200,0,0,0.5);
     color: #d0d0d0;
-    padding: 8px;
+    padding: 4px 8px;
     width: 100%;
     border-radius: 2px;
     -moz-border-radius: 2px;

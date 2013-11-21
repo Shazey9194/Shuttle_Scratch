@@ -18,8 +18,8 @@
                 {% for user in users %}
                     <tr>
                         <td><input type="checkbox"></td>
-                        <td><a href="{{ base_url() }}user/{{ user.idUser }}/show">{{ user.email }}</a></td>
-                        <td><a href="{{ base_url() }}user/{{ user.idUser }}/edit"><i class="fa-edit"></i></a></td>
+                        <td><a href="{{ domain() }}user/{{ user.idUser }}/show">{{ user.email }}</a></td>
+                        <td><a href="{{ domain() }}user/{{ user.idUser }}/edit"><i class="fa-edit"></i></a></td>
                     </tr>
                 {% endfor %}
                 </table>

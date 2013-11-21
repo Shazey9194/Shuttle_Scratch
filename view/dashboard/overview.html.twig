@@ -15,7 +15,21 @@
         <div class="col-md-6">
             <section class="well">
                 <h3>Hello</h3>
-                <p>lipsum</p>
+                <form method="post">
+                    <label>email</label>
+                    <input name="email" {{ setValue('email') }}>
+                    {{ formError('email') }}
+                    <label>ip</label>
+                    <input name="ip" {{ setValue('ip') }}>
+                    {{ formError('ip') }}
+                    <label>nom</label>
+                    <input name="nom" {{ setValue('nom') }}>
+                    {{ formError('nom') }}
+                    <label>nom2</label>
+                    <input name="nom_deux" {{ setValue('nom_deux') }}>
+                    {{ formError('nom_deux') }}
+                    <button type="submit">GO</button>
+                </form>
             </section>
         </div>
     </div>
