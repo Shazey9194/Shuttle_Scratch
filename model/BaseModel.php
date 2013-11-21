@@ -226,7 +226,7 @@ abstract class BaseModel {
 		foreach ($data as $field => $values) {
 
 			array_push($fields, $field);
-			array_push($values, $value);
+			array_push($values, $values);
 		}
 
 		foreach ($fields as $field) {
