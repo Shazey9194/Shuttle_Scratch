@@ -10,18 +10,18 @@
                     <div class="row">
                         <div class="form-group col-md-12">
                             <label for="email">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" value="{{ set_value('email')|raw }}" placeholder="account@acme.com" maxlength="255" required>
-                            {{ form_error('email')|raw }}
+                            <input type="email" class="form-control" id="email" name="email" value="{{ setValue('email')|raw }}" placeholder="account@acme.com" maxlength="255" required>
+                            {{ formError('email')|raw }}
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-md-6">
-                            <input type="text" class="form-control" id="firstname" name="firstname" value="{{ set_value('firstname')|raw }}" placeholder="Prénom" maxlength="45">
-                            {{ form_error('firstname')|raw }}
+                            <input type="text" class="form-control" id="firstname" name="firstname" value="{{ setValue('firstname')|raw }}" placeholder="Prénom" maxlength="45">
+                            {{ formError('firstname')|raw }}
                         </div>
                         <div class="form-group col-md-6">
-                            <input type="text" class="form-control" id="lastname" name="lastname" value="{{ set_value('lastname')|raw }}" placeholder="Nom" maxlength="45">
-                            {{ form_error('lastname')|raw }}
+                            <input type="text" class="form-control" id="lastname" name="lastname" value="{{ setValue('lastname')|raw }}" placeholder="Nom" maxlength="45">
+                            {{ formError('lastname')|raw }}
                         </div>
                     </div>
 

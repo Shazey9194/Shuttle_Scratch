@@ -3,6 +3,7 @@
 /**
  * The base model
  * 
+ * @author Alann Dragin <a.dragin@insta.fr>
  * @author Fabien Morchoisne <f.morchoisne@insta.fr>
  */
 abstract class BaseModel {
