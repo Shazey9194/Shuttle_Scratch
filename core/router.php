@@ -1,7 +1,9 @@
 <?php
 
 /**
- * The router core
+ * Router description
+ * 
+ * <p>The Router core perform uri routing<p>
  * 
  * @author Fabien Morchoisne <f.morchoisne@insta.fr>
  */
@@ -9,30 +11,52 @@ class Router
 {
 
     /**
-     *
-     * @var array The mapped routes
+     * The router instance
+     * 
+     * @var \Router
+     */
+    private static $instance = null;
+
+    /**
+     * The mapped routes
+     * 
+     * @var array
      */
     private $routes = array();
 
     /**
+     * The request uri
      * 
-     * @var string The request uri
+     * @var string
      */
     private $request;
 
     /**
+     * Construct
      * 
-     * @var string base_url
+     * @param string $domain The uri base to remove
      */
-    static public $base_url;
-
-    function __construct($base_url) {
-		self::$base_url = 'http://localhost/Shuttle_Scratch/';
-        $this->request = str_replace($base_url, '', $_SERVER['REQUEST_URI']);
+    private function __construct() {
+        $this->request = $_SERVER['REQUEST_URI'];
         $this->mapRoutes();
     }
 
     /**
+     * Get the unique router instance
+     * 
+     * @return \Router
+     */
+    public static function getInstance() {
+
+        if (is_null(self::$instance)) {
+            self::$instance = new Router();
+        }
+
+        return self::$instance;
+    }
+
+    /**
+     * Add a route to the router
      * 
      * @param Route $route The route to add
      */
@@ -52,7 +76,7 @@ class Router
 
         foreach ($this->routes as $route) {
 
-            if (($values = $route->match($request)) !== false) {
+            if (($values = $route->match($request)) !== FALSE) {
                 if ($route->hasParams()) {
                     $paramsNames = $route->getParams();
                     $paramsList = array();
@@ -70,7 +94,7 @@ class Router
             }
         }
 
-        throw new \RuntimeException('Aucune route ne correspond à la requete ' . $request);
+        throw new \RuntimeException('No route matching the request');
     }
 
     /**
@@ -96,7 +120,7 @@ class Router
 
     /**
      * 
-     * @return type
+     * @return void
      */
     public function run() {
         try {
@@ -118,7 +142,9 @@ class Router
 }
 
 /**
- * The route core
+ * Route description
+ * 
+ * <p>The Route core is a component of the Router core<p>
  * 
  * @author Fabien Morchoisne <f.morchoisne@insta.fr>
  */
@@ -179,7 +205,7 @@ class Route
         if (preg_match('#^' . $this->pattern . '$#', $request, $matches)) {
             return $matches;
         } else {
-            return false;
+            return FALSE;
         }
     }
 
