@@ -240,18 +240,22 @@ abstract class BaseModel {
 
 		$sql.=")";
 
+                
 		$sql.=" VALUES (";
 		foreach ($values as $value) {
-			$sql.='?,';
-			if (end($values)) {
-				$sql.='?)';
+			if (key($values)!= 0) {
+				 $sql.='?,';
 			}
+                        else
+                        {
+                          $sql.='?)';  
+                        }
 		}
 
 		$insert = $this->db->prepare($sql);
 		try {
 			$this->db->beginTransaction();
-			$insert->execute($value);
+			$insert->execute($values);
 			$this->db->commit();
 			$insert->closeCursor();
 			$status = TRUE;
