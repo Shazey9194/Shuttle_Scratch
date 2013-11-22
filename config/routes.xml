@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <routes>
     <route pattern="/login" controller="user" action="login"/>
+    <route pattern="/logout" controller="user" action="logout" params="id" />
     <route pattern="/users" controller="user" action="index"/>
         
     <route pattern="/" controller="dashboard" action="index" params="id" />

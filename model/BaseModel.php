@@ -10,7 +10,7 @@ abstract class BaseModel {
 
 	/**
 	 * The PDO instance
-	 * @var [PDO Object]
+	 * @var \PDO
 	 */
 	protected $db;
 
@@ -55,13 +55,13 @@ abstract class BaseModel {
 	 * @param string $table_name The DataBase table name <b>REQUIRED</b>
 	 * @param int $primary_Key The primary key field name <b>OPTIONAL</b>
 	 */
-	function __construct(string $table_name, int $primary_Key) {
+	function __construct($table_name, $primary_Key) {
 		$this->setHost('localhost');
 		$this->setUser('root');
 		$this->setPassword('');
 		$this->setDatabase('shuttle');
 		$this->setTable_name($table_name);
-		$this->setPrimary_Key($primary_Key);
+		$this->setPrimay_Key($primary_Key);
 		$this->init();
 	}
 
@@ -95,7 +95,7 @@ abstract class BaseModel {
 	 * @return array <b>REQUIRED</b> Value founded or array of effor message and status
 	 * @throws Exception <b>PDOException</b> On ERROR
 	 */
-	public function loadAll(int $offset = 0, int $limit = 0) {
+	public function loadAll($offset = 0, $limit = 0) {
 		try {
 			$sql = 'SELECT * FROM ' . $this->getTable_name() . " LIMIT :limit OFFSET :offset";
 			$loadAll = $this->db->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
@@ -106,7 +106,7 @@ abstract class BaseModel {
 				"msg"=>"Error Loading Data",
 				"status"=>FALSE
 				);
-			print "Call \"loadAll\" method\n Unable to load all data from" . $this->getTable_name() . "\nERROR ! : " . $ex->getMessage();
+			print 'Call "loadAll" method Unable to load all data from : " . $this->getTable_name() . "\nERROR ! :' . $ex->getMessage();
 		}
 		return $status;
 	}
@@ -117,8 +117,17 @@ abstract class BaseModel {
 	 * @return array Fetch assoc array
 	 * @throws Exception <b>PDOException</b> On ERROR
 	 */
-	public function loadById(int $id) {
-		$sql = 'SELECT * FROM' . $this->getTable_name() . " WHERE " . $this->getPrimary_Key() . "= :id";
+	public function loadById($id, $columns = array()) {
+		$sql = 'SELECT ';
+
+		if (!empty($columns)) {
+			$sql.= implode(',', $columns);
+		} else {
+			$sql .= '*';
+		}
+
+		
+		$sql .= ' FROM ' . $this->getTable_name() . " WHERE " . $this->getPrimary_Key() . "= :id";
 		try {
 			$loadById = $this->db->prepare($sql, array(PDO::ATTR_CURSOR => PDO:: CURSOR_FWDONLY));
 			$loadById->execute(array(':id' => $id));
@@ -128,7 +137,8 @@ abstract class BaseModel {
 				"msg"=>"error",
 				"status"=>FALSE
 				);
-			print "Call \"loadById\" method\n Unable to load id : '$id' from" . $this->getTable_name() . " \nERROR ! : " . $ex->getMessage();
+				echo '<pre>';
+			print "Call \"loadById\" method\n Unable to load id : '$id' from :" . $this->getTable_name() . " \nERROR ! : \n" . $ex->getMessage()."\n";
 		}
 		return $status;
 	}
