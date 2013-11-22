@@ -1,11 +1,11 @@
 <?php
-
 /**
  * The base model
  * 
  * @author Alann Dragin <a.dragin@insta.fr>
  * @author Fabien Morchoisne <f.morchoisne@insta.fr>
  */
+
 abstract class BaseModel {
 
 	/**
@@ -226,7 +226,7 @@ abstract class BaseModel {
 		foreach ($data as $field => $values) {
 
 			array_push($fields, $field);
-			array_push($values, $value);
+			array_push($values, $values);
 		}
 
 		foreach ($fields as $field) {
@@ -240,18 +240,22 @@ abstract class BaseModel {
 
 		$sql.=")";
 
+                
 		$sql.=" VALUES (";
 		foreach ($values as $value) {
-			$sql.='?,';
-			if (end($values)) {
-				$sql.='?)';
+			if (key($values)!= 0) {
+				 $sql.='?,';
 			}
+                        else
+                        {
+                          $sql.='?)';  
+                        }
 		}
 
 		$insert = $this->db->prepare($sql);
 		try {
 			$this->db->beginTransaction();
-			$insert->execute($value);
+			$insert->execute($values);
 			$this->db->commit();
 			$insert->closeCursor();
 			$status = TRUE;
@@ -355,5 +359,6 @@ abstract class BaseModel {
 	public function setPrimay_Key($primary_Key = NULL) {
 		$this->primary_Key = $primary_Key;
 	}
+
 
 }
