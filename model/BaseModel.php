@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The base model
  * 
@@ -233,5 +232,6 @@ abstract class BaseModel
 
         return $this;
     }
+
 
 }
