@@ -5,7 +5,7 @@ require_once './vendor/twig/Autoloader.php';
 /**
  * The base controller
  * 
- * @author Fabien Morchoisne <f.morchoisne@insta.fr>
+ * @author Fabien MORCHOISNE <f.morchoisne@insta.fr>
  */
 abstract class BaseController
 {

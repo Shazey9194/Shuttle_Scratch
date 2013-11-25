@@ -5,7 +5,7 @@
  * 
  * <p>The validator core perform form validation<p>
  * 
- * @author Fabien Morchoisne <f.morchoisne@insta.fr>
+ * @author Fabien MORCHOISNE <f.morchoisne@insta.fr>
  */
 class Validator
 {
