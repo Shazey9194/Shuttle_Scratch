@@ -1,6 +1,6 @@
 <?php
 require_once './Controller/BaseController.php';
-Session::run();
+
 /**
  * The dasboard controller
  * 
@@ -13,6 +13,7 @@ class Stats extends BaseController{
 	 */
 	public function __construct(){
 		parent::__construct();
+                Session::run();
 	}
 
 	/*

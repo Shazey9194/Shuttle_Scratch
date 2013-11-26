@@ -1,6 +1,6 @@
 <?php
 require_once './Controller/BaseController.php';
-Session::run();
+
 /**
  * The dasboard controller
  * 
@@ -10,9 +10,7 @@ class History extends BaseController{
 
 	public function __construct() {
 		parent::__construct();
-		/*$this->load->library('twig');
-		 $this->twig->ci_function_init();*/
-		//$this->load->model('ticket_model', 'ticket');
+		Session::run();
 	}
 
 	 public function index() {

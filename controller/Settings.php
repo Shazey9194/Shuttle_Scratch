@@ -1,6 +1,5 @@
 <?php
 require_once './Controller/BaseController.php';
-Session::run();
 
 /**
  * The dasboard controller
@@ -15,6 +14,7 @@ class Settings extends BaseController{
      */
     public function __construct() {
         parent::__construct();
+        Session::run();
     }
 
     /**

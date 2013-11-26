@@ -157,8 +157,8 @@ abstract class BaseModel
         }
 
         $insert = $this->db->prepare($sql);
-        $insert->execute($data);
-        var_dump($sql);
+
+        return $insert->execute($data);
     }
 
     /**

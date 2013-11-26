@@ -1,4 +1,7 @@
 <?php
+
+require_once './controller/BaseController.php';
+
 /**
  * The user controller
  * 
@@ -20,6 +23,8 @@ class User extends BaseController
      * 
      */
     public function index() {
+        
+        Session::run();
 
         $this->model->init();
 
@@ -51,7 +56,9 @@ class User extends BaseController
                 $this->model->init();
                 if (($user = $this->model->authentificate($email, $password)) != FALSE) {
 
-                    //open session with param $user
+                    $user['roles'] = json_decode($user['roles']);
+
+                    Session::startUserSession($user);
 
                     $this->redirect('/dashboard');
                 }
@@ -59,6 +66,8 @@ class User extends BaseController
                 $validator->addCustomError('badCredentials', 'Identifiants incorrects');
             }
         }
+
+
 
         $this->twig->display('user/login.html.twig');
     }
@@ -69,11 +78,18 @@ class User extends BaseController
      * @param int $idUser The user id
      */
     public function show($idUser) {
-
+        
+        Session::run();
+        
         $this->model->init();
+        
+        $user = $this->model->loadById($idUser);
+        if(empty($user)) {
+            $this->redirect('/user');
+        }
 
         $this->twig->display('user/show.html.twig', array(
-            'user' => $this->model->loadById($idUser)
+            'user' => $user
         ));
 
         $this->model->close();
@@ -85,12 +101,19 @@ class User extends BaseController
      * @param int $idUser The usr id
      */
     public function edit($idUser) {
-
+        
+        Session::run();
+        
         $this->model->init();
+        
+        $user = $this->model->loadById($idUser);
+        if(empty($user)) {
+            $this->redirect('/user');
+        }
 
         // test d'égalité uri<->form pour plus de sécurité
         if ($_SERVER['REQUEST_METHOD'] == 'POST' and $_POST['idUser'] == $idUser) {
-            
+
             require_once './core/validator.php';
             $validator = Validator::getInstance();
 
@@ -104,12 +127,9 @@ class User extends BaseController
                     'firstname' => ucwords(strtolower($_POST['firstname'])),
                     'lastname' => strtoupper($_POST['lastname']),
                     'roles' => json_encode($_POST['roles']),
-                ); 
-                
-                var_dump($data);
-                $this->model->save($data);
+                );
 
-                if (TRUE) { // sauvegarde utilisateur
+                if ($this->model->save($data)) { // sauvegarde utilisateur
                     //success
                 } else {
                     //erreur
@@ -118,7 +138,7 @@ class User extends BaseController
         }
 
         $this->twig->display('user/edit.html.twig', array(
-            'user' => $this->model->loadById($idUser)
+            'user' => $user
         ));
 
         $this->model->close();
@@ -130,6 +150,7 @@ class User extends BaseController
      * @param int $idUser The entity id
      */
     public function delete($idUser) {
+        Session::run();
         return $this->model->deleteById($idUser);
     }
 
@@ -137,7 +158,9 @@ class User extends BaseController
      * 
      */
     public function add() {
-
+        
+        Session::run();
+        
         if ($_SERVER['REQUEST_METHOD'] == 'POST' and !empty($_POST)) {
 
             require_once './core/validator.php';
@@ -167,10 +190,7 @@ class User extends BaseController
      */
     public function logout() {
 
-
-        // close session here
-        // $this->user->logout();
-
+        Session::endUserSession();
 
         $this->redirect('/login');
     }

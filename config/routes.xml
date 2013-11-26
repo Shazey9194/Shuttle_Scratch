@@ -2,11 +2,13 @@
 <routes>
     <route pattern="/login" controller="user" action="login"/>
     <route pattern="/logout" controller="user" action="logout"/>
-    <route pattern="/user" controller="user" action="index"/>
-        
+    <route pattern="/register" controller="user" action="register"/>
+    
     <route pattern="/" controller="dashboard" action="index" params="id" />
     <route pattern="/dashboard" controller="dashboard" action="index"/>
+    <route pattern="/dashboard/test" controller="dashboard" action="show"/>
         
+    <route pattern="/user" controller="user" action="index"/>
     <route pattern="/user/add" controller="user" action="add"/>
     <route pattern="/user/(\d+)/show" controller="user" action="show" params="id" />
     <route pattern="/user/(\d+)/edit" controller="user" action="edit" params="id" />
