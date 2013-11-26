@@ -1,4 +1,5 @@
 <?php
+
 require_once './Controller/BaseController.php';
 Session::run();
 
@@ -7,9 +8,10 @@ Session::run();
  * 
  * @author Alex Maxime CADEVALL <a.cadevall@insta.fr>
  */
+class Dashboard extends BaseController
+{
 
-class Dashboard extends BaseController{
-	/**
+    /**
      * Constructor
      */
     public function __construct() {
@@ -23,20 +25,20 @@ class Dashboard extends BaseController{
         $this->twig->display('dashboard/overview.html.twig', array('session' => $_SESSION));
     }
 
-	public function add() {
-		//to do
-	}
+    public function add() {
+        //to do
+    }
 
-	public function delete($id) {
-		//to do
-	}
+    public function delete($id) {
+        //to do
+    }
 
-	public function edit($id) {
-		//to do
-	}
+    public function edit($id) {
+        //to do
+    }
 
-	public function show($id) {
-		//to do
-	}
+    public function show($id) {
+        //to do
+    }
 
 }

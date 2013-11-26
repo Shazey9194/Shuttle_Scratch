@@ -5,7 +5,7 @@
  * 
  * <p>The Router core perform uri routing<p>
  * 
- * @author Fabien Morchoisne <f.morchoisne@insta.fr>
+ * @author Fabien MORCHOISNE <f.morchoisne@insta.fr>
  */
 class Router
 {

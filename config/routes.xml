@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <routes>
     <route pattern="/login" controller="user" action="login"/>
-    <route pattern="/logout" controller="user" action="logout" params="id" />
-    <route pattern="/users" controller="user" action="index"/>
+    <route pattern="/logout" controller="user" action="logout"/>
+    <route pattern="/user" controller="user" action="index"/>
         
     <route pattern="/" controller="dashboard" action="index" params="id" />
     <route pattern="/dashboard" controller="dashboard" action="index"/>
         
-    <route pattern="/users/add" controller="user" action="add"/>
-    <route pattern="/users/(\d+)/show" controller="user" action="show" params="id" />
-    <route pattern="/users/(\d+)/edit" controller="user" action="edit" params="id" />
-    <route pattern="/users/(\d+)/delete" controller="user" action="delete" params="id" />
+    <route pattern="/user/add" controller="user" action="add"/>
+    <route pattern="/user/(\d+)/show" controller="user" action="show" params="id" />
+    <route pattern="/user/(\d+)/edit" controller="user" action="edit" params="id" />
+    <route pattern="/user/(\d+)/delete" controller="user" action="delete" params="id" />
 
     <route pattern="/company" controller="company" action="index"/>
     <route pattern="/company/add" controller="company" action="add"/>

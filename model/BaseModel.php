@@ -5,365 +5,303 @@
  * 
  * @author Alann Dragin <a.dragin@insta.fr>
  * @author Fabien Morchoisne <f.morchoisne@insta.fr>
+ * @author Alex Maxime Cadevall <a.cadevall@insta.fr>
  */
-abstract class BaseModel {
+abstract class BaseModel
+{
 
-	/**
-	 * The PDO instance
-	 * @var \PDO
-	 */
-	protected $db;
+    /**
+     * The PDO instance
+     * 
+     * @var \PDO
+     */
+    protected $db;
 
-	/**
-	 * The Database host name <b>REQUIRED</b>
-	 * @var string
-	 */
-	private $host;
+    /**
+     *
+     * @var type 
+     */
+    public $query;
 
-	/**
-	 * the database name  <b>REQUIRED</b>
-	 * @var string
-	 */
-	protected $database;
+    /**
+     *
+     * @var type 
+     */
+    protected $config;
 
-	/**
-	 * The database user name <b>REQUIRED</b>
-	 * @var string
-	 */
-	private $user;
+    /**
+     *
+     * @var type 
+     */
+    protected $table;
 
-	/**
-	 * The database password <b>REQUIRED</b>
-	 * @var string
-	 */
-	private $password;
+    /**
+     * The primary key field name or name in a table
+     * 
+     * @var integer
+     */
+    protected $primaryKey;
 
-	/**
-	 * The DataBase table name <b>REQUIRED</b>
-	 * @var string
-	 */
-	protected $table_name;
+    /**
+     * Constructor
+     * 
+     * @param string $table The DataBase table name <b>REQUIRED</b>
+     * @param string $primaryKey The primary key field name <b>OPTIONAL</b>
+     */
+    function __construct($table, $primaryKey) {
 
-	/**
-	 *  The primary key field name or name in a table
-	 * @var integer
-	 */
-	protected $primary_Key;
+        $this->query = array(
+            'select' => '',
+            'from' => '',
+            'where' => '',
+            'join' => '',
+            'orderBy' => '',
+            'limit' => '',
+        );
 
-	/**
-	 * Constructor
-	 * @param string $table_name The DataBase table name <b>REQUIRED</b>
-	 * @param int $primary_Key The primary key field name <b>OPTIONAL</b>
-	 */
-	function __construct($table_name, $primary_Key) {
-		$this->setHost('localhost');
-		$this->setUser('root');
-		$this->setPassword('');
-		$this->setDatabase('shuttle');
-		$this->setTable_name($table_name);
-		$this->setPrimay_Key($primary_Key);
-		$this->init();
-	}
+        $this->config = array(
+            'host' => 'localhost',
+            'database' => 'shuttle',
+            'user' => 'root',
+            'password' => '',
+            'charset' => 'UTF8'
+        );
 
-	/**
-	 * Initialise PDO Object
-	 * @throws Exception PDOException
-	 */
-	public function init() {
-		try {
-			$this->db = new PDO('mysql:host=' . $this->getHost() . ';dbname=' . $this->getDatabase(), $this->getUser(), $this->getPassword());
-			$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			$this->db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-			$this->db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-			$this->db->exec("SET NAMES 'UTF8'");
-		} catch (PDOException $ex) {
-			print "Unable to connect to Database ! Check configuration in \"init()\" method !\nERROR : !" . $ex->getMessage();
-		}
-	}
+        $this->table = $table;
+        $this->primaryKey = $primaryKey;
+    }
 
-	/**
-	 * Close Database connexion
-	 */
-	public function close() {
-		$this->db = NULL;
-	}
+    /**
+     * Initialise PDO Object
+     * 
+     * @return void
+     * @throws Exception PDOException
+     */
+    public function init() {
 
-	/**
-	 * Load all data from a table delimit by a $limit and $offset parameter
-	 * @param int $offset <b>REQUIRED</b> Number of lines to load
-	 * @param int $limit <b>REQUIRED</b> Start load from this limit
-	 * @return array <b>REQUIRED</b> Value founded or array of effor message and status
-	 * @throws Exception <b>PDOException</b> On ERROR
-	 */
-	public function loadAll($offset = 0, $limit = 0) {
-		try {
-			$sql = 'SELECT * FROM ' . $this->getTable_name() . " LIMIT :limit OFFSET :offset";
-			$loadAll = $this->db->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-			$loadAll->execute(array(':limit' => $limit, ':offset' => $offset));
-			$status = $loadAll->fetchAll();
-		} catch (Exception $ex) {
-			$status = array(
-				"msg"=>"Error Loading Data",
-				"status"=>FALSE
-				);
-			print 'Call "loadAll" method Unable to load all data from : " . $this->getTable_name() . "\nERROR ! :' . $ex->getMessage();
-		}
-		return $status;
-	}
+        try {
+            $this->db = new PDO('mysql:host=' . $this->config['host'] . ';dbname=' . $this->config['database'], $this->config['user'], $this->config['password']);
+            $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            $this->db->exec('SET NAMES "' . $this->config['charset'] . '"');
+        } catch (PDOException $ex) {
+            print 'Unable to connect to Database ! Check configuration in "init()" method !\nERROR : !' . $ex->getMessage();
+        }
+    }
 
-	/**
-	 * Load data with $id parameter
-	 * @param int $id <b>REQUIRED</b> The Primary Key
-	 * @return array Fetch assoc array
-	 * @throws Exception <b>PDOException</b> On ERROR
-	 */
-	public function loadById($id, $columns = array()) {
-		$sql = 'SELECT ';
+    /**
+     * 
+     * @param type $id
+     */
+    public function loadById($id, $columns = array()) {
+        $sql = $this->select($columns)
+                ->where(array($this->primaryKey . ' = :id'))
+                ->buildQuery();
 
-		if (!empty($columns)) {
-			$sql.= implode(',', $columns);
-		} else {
-			$sql .= '*';
-		}
+        $loadById = $this->db->prepare($sql);
+        $loadById->execute(array(':id' => $id));
+        return $loadById->fetch();
+    }
 
-		
-		$sql .= ' FROM ' . $this->getTable_name() . " WHERE " . $this->getPrimary_Key() . "= :id";
-		try {
-			$loadById = $this->db->prepare($sql, array(PDO::ATTR_CURSOR => PDO:: CURSOR_FWDONLY));
-			$loadById->execute(array(':id' => $id));
-			$status = $loadById->fetch();
-		} catch (Exception $ex) {
-			$status = array(
-				"msg"=>"error",
-				"status"=>FALSE
-				);
-				echo '<pre>';
-			print "Call \"loadById\" method\n Unable to load id : '$id' from :" . $this->getTable_name() . " \nERROR ! : \n" . $ex->getMessage()."\n";
-		}
-		return $status;
-	}
+    /**
+     * 
+     */
+    public function loadAll($columns = array()) {
+        $sql = $this->select($columns)
+                ->buildQuery();
+
+        $loadAll = $this->db->prepare($sql);
+        $loadAll->execute();
+        return $loadAll->fetchAll();
+    }
+
+    /**
+     * 
+     */
+    public function loadWhere($clause = array(), $columns = array()) {
+        $sql = $this->select($columns)
+                ->where($clause)
+                ->buildQuery();
+
+        $loadWhere = $this->db->prepare($sql);
+        $loadWhere->execute();
+        return $loadWhere->fetchAll();
+    }
+
+    /**
+     * 
+     * @param type $data
+     * @param type $table
+     */
+    public function save($data, $table = null) {
+
+        if (in_array($this->primaryKey, array_keys($data))) {
+            $sql = 'UPDATE ';
+            $sql .= $table != null ? $table : $this->table;
+            $sql .= ' SET ';
+
+            $columns = array_keys($data);
+            foreach ($columns as $column) {
+                if ($column != $this->primaryKey) {
+                    $sql .= $column . ' = :' . $column;
+                    if (end($columns) != $column) {
+                        $sql .= ', ';
+                    }
+                }
+            }
+            $sql .= ' WHERE ' . $this->primaryKey . ' = :' . $this->primaryKey;
+        } else {
+            $sql = 'INSERT INTO ';
+            $sql .= $table != null ? $table : $this->table;
+            $sql .= ' (' . implode(',', array_keys($data)) . ') VALUES (:' . implode(',:', array_keys($data)) . ')';
+        }
+
+        $insert = $this->db->prepare($sql);
+        $insert->execute($data);
+        var_dump($sql);
+    }
+
+    /**
+     * Unset PDO Objects
+     * 
+     * @return void
+     */
+    public function close() {
+
+        $this->db = NULL;
+    }
+
+    /**
+     * 
+     * @return string $sql The SQL query
+     */
+    protected function buildQuery() {
+
+        if ($this->query['select'] != '') {
+            $sql = 'SELECT ' . $this->query['select'];
+        } else {
+            $sql = 'SELECT *';
+        }
+
+        if ($this->query['from'] != '') {
+            $sql .= ' FROM ' . $this->query['from'];
+        } else {
+            $sql .= ' FROM ' . $this->table;
+        }
+
+        $sql .= $this->query['join'];
 
 
-	/**
-	 * Delete data in table by $id as parameter
-	 * @param int $id <b>REQUIRED</b> Primary key ID
-	 * @return boolean <b>TRUE</b> on succes. <b>FALSE</b> either !
-	 * @throws Exception <b>PDOException</b> On ERROR
-	 */
-	public function deleteById(int $id) {
-		$sql = "DELETE FROM " . $this->getTable_name() . " WHERE" . $this->getPrimary_Key() . "= :id";
-		try {
-			$delete_sql = $this->db->prepare($sql);
-			$this->db->beginTransaction();
-			$delete_sql->execute(array(':id' => $id));
-			$this->db->commit();
-			$delete_sql->closeCursor();
-			$status = TRUE;
-		} catch (Exception $ex) {
-			$this->db->rollBack();
-			print "Call \"deleteById\" method \nUnable to delete id : '$id' from" . $this->getTable_name() . " \nERROR ! : " . $ex->getMessage();
-			$status = FALSE;
-		}
-		return $status;
-	}
+        if ($this->query['where'] != '') {
+            $sql .= ' WHERE ' . $this->query['where'];
+        }
 
-	/**
-	 * Update data in table with an array of data
-	 * @param int $id Primary key where to update
-	 * @param array $data Array of value to update
-	 * @return boolean <b>TRUE</b> on succes. <b>FALSE</b> either !
-	 * @throws Exception <b>PDOException</b> On ERROR
-	 */
-	public function updateFields(int $id, array $data) {
-		$flag = 0;
-		$array_values_update = array();
-		$array_execute = array();
-		$i = 1;
-		$j = 1;
-		try {
+        $sql .= $this->query['orderBy'] . $this->query['limit'];
 
-			$sql = "UPDATE " . $this->getTable_name() . " SET ";
+        return (string) $sql;
+    }
 
-			foreach ($data as $field => $value) {
-				if ($flag == 0) {
-					$sql.=' ' . $field . ' = :value' . $i;
-					$flag = 1;
-				} else {
-					$sql.=' ' . ', ' . $field . ' = :value' . $i;
-				}
+    /**
+     * Build a 'select' query
+     * 
+     * @param array $columns
+     */
+    protected function select($columns = array()) {
 
-				array_push($array_values_update, $value);
-				$i++;
-			}
+        if (!empty($columns)) {
 
-			$sql.=$this->getPrimary_Key() . ' = :id';
+            if ($this->query['select'] != '') {
+                $this->query['select'] .= ',';
+            }
 
-			foreach ($array_values_update as $values) {
-				array_push($array_execute, array(':values' . $j => $values));
-				$j++;
-			}
+            $this->query['select'] .= implode(',', $columns);
+        }
 
-			array_push($array_execute, array(':id' => $id));
+        return $this;
+    }
 
-			$update = $this->db->prepare($sql);
-			$this->db->beginTransaction();
-			$update->execute($array_execute);
-			$this->db->commit();
-			$update->closeCursor();
-			$status = TRUE;
-		} catch (Exception $ex) {
-			$this->db->rollBack();
-			print "Call \"updateFields\" method \nUnable to update id : ['$id'] and data [" . var_dump($data) . "] from" . $this->getTable_name() . " ERROR ! :" . $ex->getMessage();
-			$status = FALSE;
-		}
-		return $status;
-	}
+    /**
+     * Build a 'from' query
+     * 
+     * @param array $tables
+     */
+    protected function from($tables = array()) {
 
-	/**
-	 * Insert data into database
-	 * @param array $data Array of value to insert
-	 * @return boolean <b>TRUE</b> on succes. <b>FALSE</b> either !
-	 * @throws Exception <b>PDOException</b> On ERROR
-	 */
-	public function insertData(array $data) {
+        if (!empty($tables)) {
 
-		$fields = array();
-		$values = array();
-		$flag = 0;
+            if ($this->query['from'] != '') {
+                $this->query['from'] .= ',';
+            }
 
-		$sql = "INSERT INTO " . $this->getTable_name() . " (";
+            $this->query['from'] .= implode(',', $tables);
+        }
 
-		foreach ($data as $field => $values) {
+        return $this;
+    }
 
-			array_push($fields, $field);
-			array_push($values, $value);
-		}
+    /**
+     * Build a 'join' query
+     * 
+     * @param string $table The joined table
+     * @param string $ref The reference clause
+     */
+    protected function join($table = null, $ref = null) {
 
-		foreach ($fields as $field) {
+        if (!is_null($table) and !is_null($ref)) {
 
-			if ($flag == 0) {
-				$sql.=$field;
-				$flag = 1;
-			}
-			$sql.=", " . $field;
-		}
+            $this->query['join'] .= ' JOIN ' . $table . ' ON ' . $ref;
+        }
 
-		$sql.=")";
+        return $this;
+    }
 
-		$sql.=" VALUES (";
-		foreach ($values as $value) {
-			$sql.='?,';
-			if (end($values)) {
-				$sql.='?)';
-			}
-		}
+    /**
+     * Build a 'where' query
+     * 
+     * @param array $clauses
+     */
+    protected function where($clauses = array(), $logic = 'AND') {
 
-		$insert = $this->db->prepare($sql);
-		try {
-			$this->db->beginTransaction();
-			$insert->execute($value);
-			$this->db->commit();
-			$insert->closeCursor();
-			$status = TRUE;
-		} catch (Exception $ex) {
-			$this->db->rollBack();
-			print "Call \"insertData\" method \nUnable to insert data [" . var_dump($data) . "] from" . $this->getTable_name() . " ERROR ! :" . $ex->getMessage();
-			$status = FALSE;
-		}
-		return $status;
-	}
+        if (!empty($clauses)) {
 
-	/**
-	 * Update data if primary key exist else insert data
-	 * @param array $dataArray of value to save
-	 * @return boolean <b>TRUE</b> on succes. <b>FALSE</b> either !
-	 */
-	public function save(array $data) {
-		if (array_key_exists($this->getPrimary_Key(), $data)) {
-			$status = updateFields($this->getPrimary_Key(), $data);
-		} else {
-			$status = $this->insertData($data);
-		}
-		print "Call \"save\" method \nUnable to save data [" . var_dump($data) . "] from" . $this->getTable_name() . " ERROR ! :" . $ex->getMessage();
-		return $status;
-	}
+            if ($this->query['where'] != '') {
+                $this->query['where'] .= ' ' . $logic . ' ';
+            }
 
-	/**
-	 * Get [PDO Object] Instance
-	 * Please do not use !
-	 * @return [PDO Object] The database connexion
-	 */
-	private function getDb() {
-		return $this->db;
-	}
+            $this->query['where'] .= '(' . implode(' AND ', $clauses) . ')';
+        }
 
-	/**
-	 * Set [PDO Object] Instance
-	 * Please do not use !
-	 * @param [PDO Object] $db The database connexion
-	 */
-	private function setDb($db) {
-		$this->db = $db;
-	}
+        return $this;
+    }
 
-	/**
-	 * Get the database host name
-	 * @return string the data base host name
-	 */
-	private function getHost() {
-		return $this->host;
-	}
+    /**
+     * Build an 'order by' query
+     * 
+     * @param array $columns The ordered columns
+     * @param string The ordering way
+     */
+    protected function orderBy($columns = array(), $way = 'ASC') {
 
-	/**
-	 * 
-	 * @param type $host
-	 */
-	public function setHost($host) {
-		$this->host = $host;
-	}
+        if (!empty($columns)) {
+            $this->query['orderBy'] = ' ORDER BY ' . implode(',', $columns) . ' ' . $way;
+        }
 
-	public function getDatabase() {
-		return $this->database;
-	}
+        return $this;
+    }
 
-	public function setDatabase($database) {
-		$this->database = $database;
-	}
+    /**
+     * Build a 'limit' query
+     * 
+     * @param int $offet The query offset
+     * @param int $limit The query limit
+     */
+    protected function limit($offset = 0, $limit = 1) {
 
-	public function getUser() {
-		return $this->user;
-	}
+        if ($limit > 0 and $offset >= 0) {
+            $this->query['limit'] = ' LIMIT ' . $offset . ', ' . $limit;
+        }
 
-	public function setUser($user) {
-		$this->user = $user;
-	}
-
-	public function getPassword() {
-		return $this->password;
-	}
-
-	public function setPassword($password) {
-		$this->password = $password;
-	}
-
-	public function getTable_name() {
-		return $this->table_name;
-	}
-
-	public function setTable_name($table_name) {
-		$this->table_name = $table_name;
-	}
-
-	public function getPrimary_Key() {
-		return $this->primary_Key;
-	}
-
-	/**
-	 * 
-	 * @param type $primary_Key
-	 */
-	public function setPrimay_Key($primary_Key = NULL) {
-		$this->primary_Key = $primary_Key;
-	}
+        return $this;
+    }
 
 }

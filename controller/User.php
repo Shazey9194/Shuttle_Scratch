@@ -2,220 +2,215 @@
 /**
  * The user controller
  * 
- * @author Fabien Morchoisne <f.morchoisne@insta.fr>
+ * @author Fabien MORCHOISNE <f.morchoisne@insta.fr>
  */
+class User extends BaseController
+{
 
-require_once './Controller/BaseController.php';
+    /**
+     * Construct
+     * 
+     */
+    public function __construct() {
+        parent::__construct('UserModel');
+    }
 
-class User extends BaseController {
+    /**
+     * The controller index
+     * 
+     */
+    public function index() {
 
-	/**
-	 * Construct
-	 * 
-	 */
-	public function __construct() {
-		parent::__construct();
-	}
+        $this->model->init();
 
-	/**
-	 * The controller index
-	 * 
-	 */
-	public function index() {
-		/* $this->twig->display('user/users.html.twig', array(
-		  'users' => $this->user->loadAll()
-		  )); */
-		$this->twig->display('user/users.html.twig');
-	}
+        $this->twig->display('user/users.html.twig', array(
+            'users' => $this->model->loadAll()
+        ));
 
-	/**
-	 * The user login action
-	 * 
-	 */
-	public function login() {
-		require_once './model/UserModel.php';
-		$user = new UserModel();
-		if ($_SERVER['REQUEST_METHOD'] == 'POST' and !empty($_POST)) {
-			require_once './core/validator.php';
-			$validator = Validator::getInstance();
-			$validator->addRules('email', 'required|email')
-					->addRules('password', 'required');
-			if ($validator->run()) {
-				$email = $_POST['email'];
-				$password = md5($_POST['password'] . $_POST['email']);
-				if ($user->authentification($email, $password) == TRUE) {
-					$this->redirect('dashboard');
-				} else {
-					$validator->addCustomError('badCredentials', 'Identifiants incorrects');
-				}
-			}
-		}
-		$this->twig->display('user/login.html.twig');
-	}
+        $this->model->close();
+    }
 
-	/**
-	 * Add an user
-	 * 
-	 */
-	public function add() {
-		
-	}
+    /**
+     * The user login action
+     * 
+     */
+    public function login() {
 
-	/**
-	 * Display an user from its id
-	 * 
-	 * @param int $idUser The user id
-	 */
-	public function show($idUser) {
-		$this->twig->display('user/show.html.twig');
-	}
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' and !empty($_POST)) {
+            require_once './core/validator.php';
+            $validator = Validator::getInstance();
 
-	/**
-	 * Edit an user from its id
-	 * 
-	 * @param int $idUser The usr id
-	 */
-	public function edit($idUser) {
-		/* if ($this->input->server('REQUEST_METHOD') == 'POST') {
+            $validator->addRules('email', 'required|email')
+                    ->addRules('password', 'required');
 
-		  $this->load->library('form_validation');
-		  $this->form_validation->set_error_delimiters('<div class="input-error">', '</div>');
+            if ($validator->run()) {
 
-		  //$this->form_validation->set_rules('company', 'Société', 'trim|required|strtolower|max_length[255]');
-		  //$this->form_validation->set_rules('email', 'Email', 'trim|required|strtolower|valid_email|callback_uniqueEmail');
-		  $this->form_validation->set_rules('firstname', 'Prenom', 'max_length[45]');
-		  $this->form_validation->set_rules('lastname', 'Nom', 'max_length[45]');
-		  $this->form_validation->set_rules('roles[]', 'Roles', '');
+                $email = strtolower($_POST['email']);
+                $password = md5($_POST['password'] . $email);
 
-		  if ($this->form_validation->run()) {
+                $this->model->init();
+                if (($user = $this->model->authentificate($email, $password)) != FALSE) {
 
-		  $data = array(
-		  'idUser' => $idUser,
-		  'company' => $this->input->post('company'),
-		  'firstname' => $this->input->post('firstname'),
-		  'lastname' => $this->input->post('lastname'),
-		  'roles' => json_encode($this->input->post('roles'))
-		  );
+                    //open session with param $user
 
-		  if ($this->user->save($data)) {
-		  echo 'sauvegardé';
-		  return true;
-		  } else {
-		  echo 'erreur à la sauvegarde';
-		  return false;
-		  }
-		  }
-		  } */
+                    $this->redirect('/dashboard');
+                }
 
-		$this->twig->display('user/edit.html.twig');
-	}
+                $validator->addCustomError('badCredentials', 'Identifiants incorrects');
+            }
+        }
 
-	/**
-	 * Delete an user from its id
-	 * 
-	 * @param int $idUser The entity id
-	 */
-	public function delete($idUser) {
-		
-	}
+        $this->twig->display('user/login.html.twig');
+    }
 
-	public function create() {
-		/*
-		  if ($this->input->server('REQUEST_METHOD') == 'POST') {
+    /**
+     * Display an user from its id
+     * 
+     * @param int $idUser The user id
+     */
+    public function show($idUser) {
 
-		  $this->load->library('form_validation');
-		  $this->form_validation->set_error_delimiters('<div class="input-error">', '</div>');
+        $this->model->init();
 
-		  //$this->form_validation->set_rules('company', 'Société', 'trim|required|strtolower|max_length[255]');
-		  $this->form_validation->set_rules('email', 'Email', 'trim|required|strtolower|valid_email|callback_uniqueEmail');
-		  $this->form_validation->set_rules('password', 'Mot de passe', 'trim|required');
-		  $this->form_validation->set_rules('confirmation', 'Confirmation', 'required|matches[password]');
-		  $this->form_validation->set_rules('firstname', 'Prenom', 'max_length[45]');
-		  $this->form_validation->set_rules('lastname', 'Nom', 'max_length[45]');
+        $this->twig->display('user/show.html.twig', array(
+            'user' => $this->model->loadById($idUser)
+        ));
 
-		  if ($this->form_validation->run()) {
+        $this->model->close();
+    }
 
-		  $now = new \DateTime();
-		  $data = array(
-		  'company' => $this->input->post('company'),
-		  'email' => $this->input->post('email'),
-		  'password' => md5($this->input->post('password')),
-		  'registerDate' => $now->format('Y-m-d H:i:s'),
-		  'firstname' => $this->input->post('firstname'),
-		  'lastname' => $this->input->post('lastname')
-		  );
+    /**
+     * Edit an user from its id
+     * 
+     * @param int $idUser The usr id
+     */
+    public function edit($idUser) {
 
-		  if ($this->user->save($data)) {
-		  echo 'enregistré';
-		  return true;
-		  } else {
-		  echo 'erreur à l\'enregistrement';
-		  return false;
-		  }
-		  }
-		  }
-		 */
-		$this->twig->display('user/create.html.twig');
-	}
+        $this->model->init();
 
-	public function logout() {
-		require_once './model/UserModel.php';
-		$user = new UserModel();
-		$user->deleteData();
-		$this->redirect('login');
-	}
+        // test d'égalité uri<->form pour plus de sécurité
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' and $_POST['idUser'] == $idUser) {
+            
+            require_once './core/validator.php';
+            $validator = Validator::getInstance();
 
-	public function register() {
+            $validator->addRules('firstname', 'maxlength[45]')
+                    ->addRules('lastname', 'maxlength[45]');
 
-		/* if ($this->input->server('REQUEST_METHOD') == 'POST') {
+            if ($validator->run()) {
 
-		  $this->load->library('form_validation');
-		  $this->form_validation->set_error_delimiters('<div class="input-error">', '</div>');
+                $data = array(
+                    'idUser' => $idUser,
+                    'firstname' => ucwords(strtolower($_POST['firstname'])),
+                    'lastname' => strtoupper($_POST['lastname']),
+                    'roles' => json_encode($_POST['roles']),
+                ); 
+                
+                var_dump($data);
+                $this->model->save($data);
 
-		  //$this->form_validation->set_rules('company', 'Société', 'trim|required|strtolower|max_length[255]');
-		  $this->form_validation->set_rules('email', 'Email', 'trim|required|strtolower|valid_email|callback_uniqueEmail');
-		  $this->form_validation->set_rules('password', 'Mot de passe', 'trim|required');
-		  $this->form_validation->set_rules('confirmation', 'Confirmation', 'required|matches[password]');
+                if (TRUE) { // sauvegarde utilisateur
+                    //success
+                } else {
+                    //erreur
+                }
+            }
+        }
 
-		  if ($this->form_validation->run()) {
+        $this->twig->display('user/edit.html.twig', array(
+            'user' => $this->model->loadById($idUser)
+        ));
 
-		  $now = new \DateTime();
-		  $data = array(
-		  //'company' => $this->input->post('company'),
-		  'email' => $this->input->post('email'),
-		  'password' => md5($this->input->post('password') . $this->input->post('email')),
-		  'registerDate' => $now->format('Y-m-d H:i:s'),
-		  );
+        $this->model->close();
+    }
 
-		  if ($this->user->save($data)) {
-		  echo 'enregistré';
-		  return true;
-		  } else {
-		  echo 'erreur à l\'enregistrement';
-		  return false;
-		  }
-		  }
-		  }
-		 */
-		$this->twig->display('user/register.html.twig');
-	}
+    /**
+     * Delete an user from its id
+     * 
+     * @param int $idUser The entity id
+     */
+    public function delete($idUser) {
+        return $this->model->deleteById($idUser);
+    }
 
-	public function checkUserAgent() {
-		/*
-		  $this->load->library('user_agent');
-		  if ($this->agent->is_browser('Internet Explorer') OR $this->agent->is_browser('MSIE')) {
-		  $this->load->helper('url');
-		  $this->twig->display('user/browsers.html.twig');
-		  die;
-		  }
-		 * 
-		 */
-	}
+    /**
+     * 
+     */
+    public function add() {
 
-	public function uniqueEmail($email) {
-		/*
-		  $this->form_validation->set_message('uniqueEmail', 'Un compte existe déjà pour cet Email');
-		  return $this->user->isUniqueEmail($email); */
-	}
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' and !empty($_POST)) {
+
+            require_once './core/validator.php';
+            $validator = Validator::getInstance();
+
+            $validator->addRules('firstname', 'maxlength[45]')
+                    ->addRules('lastname', 'maxlength[45]')
+                    ->addRules('email', 'required|email|maxlenght[255]');
+
+            if ($validator->run()) {
+
+                $data = array(); // donnees utilisateur
+
+                if (TRUE) { // sauvegarde utilisateur
+                    //success
+                } else {
+                    //erreur
+                }
+            }
+        }
+
+        $this->twig->display('user/create.html.twig');
+    }
+
+    /**
+     * 
+     */
+    public function logout() {
+
+
+        // close session here
+        // $this->user->logout();
+
+
+        $this->redirect('/login');
+    }
+
+    /**
+     * 
+     */
+    public function register() {
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' and !empty($_POST)) {
+
+            require_once './core/validator.php';
+            $validator = Validator::getInstance();
+
+            $validator->addRules('email', 'required|email|maxlenght[255]')
+                    ->addRules('password', 'required|maxlength[24]')
+                    ->addRules('confirm', 'match[password]');
+
+            if ($validator->run()) {
+
+                $email = strtolower($_POST['email']);
+                $password = md5($_POST['password'] . $email);
+
+                if (!$this->model->uniqueEmail($email)) {
+
+                    $validator->addCustomError('uniqueEmail', 'Cet adresse email est déjà utilisée');
+                } else {
+
+                    $data = array(); // donnees utilisateur
+
+                    if (TRUE) { // sauvegarde utilisateur
+                        //success
+                    } else {
+                        //erreur
+                    }
+                }
+            }
+        }
+
+        $this->twig->display('user/register.html.twig');
+    }
 
 }
