@@ -1,5 +1,6 @@
 <?php
 require_once './Controller/BaseController.php';
+Session::run();
 /**
  * The dasboard controller
  * 

@@ -1,7 +1,4 @@
 <?php
-
-require_once './Controller/BaseController.php';
-
 /**
  * The user controller
  * 

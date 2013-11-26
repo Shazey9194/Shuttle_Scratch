@@ -37,7 +37,8 @@ abstract class BaseController
 
         Twig_Autoloader::register();
         $loader = new Twig_Loader_Filesystem('./view');
-        $this->twig = new Twig_Environment($loader);
+        $this->twig = new Twig_Environment($loader, array('debug' => true));
+		$this->twig->addExtension(new Twig_Extension_Debug());
 
         $this->extend();
     }
@@ -135,5 +136,10 @@ abstract class BaseController
             $this->twig->addFunction($function);
         }
     }
+	
+	protected function redirect($location){
+		header('Location: '.$location);
+		exit();
+	}
 
 }
