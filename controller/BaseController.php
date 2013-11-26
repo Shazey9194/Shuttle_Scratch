@@ -128,18 +128,13 @@ abstract class BaseController
                     }
                 });
 
-        $functions[] = new Twig_SimpleFunction('isGranted', function() {
-                    return FALSE;
+        $functions[] = new Twig_SimpleFunction('isGranted', function($role) {
+                    return in_array($role, $this->session->userdata('roles'));
                 });
 
         foreach ($functions as $function) {
             $this->twig->addFunction($function);
         }
     }
-	
-	protected function redirect($location){
-		header('Location: '.$location);
-		exit();
-	}
 
 }

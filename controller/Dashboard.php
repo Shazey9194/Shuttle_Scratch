@@ -1,13 +1,13 @@
 <?php
-
-require_once './Controller/BaseController.php';
-Session::run();
-
 /**
  * The dasboard controller
  * 
  * @author Alex Maxime CADEVALL <a.cadevall@insta.fr>
  */
+
+require_once './Controller/BaseController.php';
+Session::run();
+
 class Dashboard extends BaseController
 {
 
@@ -22,7 +22,9 @@ class Dashboard extends BaseController
      * The controller index
      */
     public function index() {
-        $this->twig->display('dashboard/overview.html.twig', array('session' => $_SESSION));
+		$sessionData = Session::getInstance();
+		$sessionData = $sessionData->getData();
+        $this->twig->display('dashboard/overview.html.twig', array('session' => $sessionData));
     }
 
     public function add() {

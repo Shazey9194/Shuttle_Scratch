@@ -7,11 +7,11 @@
  * 
  * @author Alex Maxime CADEVALL <a.cadevall@insta.fr>
  */
-/******************************************************
+/* * ****************************************************
  * Todo
  * $now = new \Datetime();
  * $ma_date_formatee = $now->format('Y-m-d H:i: s');
- ******************************************************/
+ * **************************************************** */
 class Session {
 
 	/**
@@ -112,7 +112,7 @@ class Session {
 	 */
 	public function existSessionData() {
 		$sessionData = $this->getData();
-		if ( $sessionData != NULL && !empty($sessionData)) {
+		if ($sessionData != NULL && !empty($sessionData)) {
 			$state = TRUE;
 		} else {
 			$state = FALSE;
@@ -137,10 +137,16 @@ class Session {
 			}
 		}
 	}
-	public static function run(){
-		if(!isset($_SESSION['user_data'])){
+
+	public static function run() {
+		if (!isset($_SESSION['user_data'])) {
+			//$this->sessionUpdate();
 			header("Location: ./login");
 			exit();
+		} else {
+			foreach ($_SESSION as $key => $value) {
+				$this->data[$key] = $value;
+			}
 		}
 	}
 

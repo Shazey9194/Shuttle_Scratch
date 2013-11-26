@@ -8,7 +8,7 @@ class User extends BaseController
 {
 
     /**
-     * Construct
+     * Constructor
      * 
      */
     public function __construct() {
@@ -17,7 +17,7 @@ class User extends BaseController
 
     /**
      * The controller index
-     * 
+     * Load default view
      */
     public function index() {
 

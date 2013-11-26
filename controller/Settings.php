@@ -8,6 +8,9 @@ Session::run();
  * @author Alex Maxime CADEVALL <a.cadevall@insta.fr>
  */
 
+require_once './Controller/BaseController.php';
+Session::run();
+
 class Settings extends BaseController{
 	
 	/**
