@@ -11,16 +11,30 @@ abstract class BaseController
 {
 
     /**
-     *
-     * @var \Twig_Environment The twig environment
+     * The twig environment
+     * 
+     * @var \Twig_Environment
      */
     protected $twig;
+
+    /**
+     * The main controller model
+     *
+     * @var \BaseModel
+     */
+    protected $model = null;
 
     /**
      * Construct
      * 
      */
-    protected function __construct() {
+    protected function __construct($model = null) {
+
+        if (null != $model) {
+            require_once './model/' . $model . '.php';
+            $this->model = new $model();
+        }
+
         Twig_Autoloader::register();
         $loader = new Twig_Loader_Filesystem('./view');
         $this->twig = new Twig_Environment($loader);
@@ -63,6 +77,15 @@ abstract class BaseController
 
     /**
      * 
+     * @param type $request
+     */
+    protected function redirect($request) {
+        header('location: .' . $request);
+        exit;
+    }
+
+    /**
+     * 
      * @return void
      */
     private function extend() {
@@ -90,7 +113,7 @@ abstract class BaseController
                         }
                     }
                 });
-                
+
         $functions[] = new Twig_SimpleFunction('hasError', function ($field) {
                     if (class_exists('Validator')) {
                         $validator = Validator::getInstance();

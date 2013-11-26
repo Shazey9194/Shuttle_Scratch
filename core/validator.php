@@ -117,8 +117,8 @@ class Validator
         foreach ($this->rules as $field => $rules) {
             $rules = explode('|', $rules);
 
-            if (isset($_POST[$field]) and trim($_POST[$field]) != '') {
-                $value = trim($_POST[$field]);
+            if (isset($_POST[$field])) {
+                $value = $_POST[$field];
 
                 foreach ($rules as $rule) {
                     if ($rule != 'required') {

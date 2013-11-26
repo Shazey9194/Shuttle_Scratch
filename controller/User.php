@@ -15,7 +15,7 @@ class User extends BaseController
      * 
      */
     public function __construct() {
-        parent::__construct();
+        parent::__construct('UserModel');
     }
 
     /**
@@ -24,7 +24,13 @@ class User extends BaseController
      */
     public function index() {
 
-        $this->twig->display('user/users.html.twig');
+        $this->model->init();
+
+        $this->twig->display('user/users.html.twig', array(
+            'users' => $this->model->loadAll()
+        ));
+
+        $this->model->close();
     }
 
     /**
@@ -42,18 +48,20 @@ class User extends BaseController
 
             if ($validator->run()) {
 
-                $email = HTML_SPECIALCHARS($_POST['email']);
-                $password = HTML_SPECIALCHARS($_POST['password'] . $_POST['email']);
+                $email = strtolower($_POST['email']);
+                $password = md5($_POST['password'] . $email);
 
-                if (TRUE) { // test authentification !
-                    // open session
+                $this->model->init();
+                if (($user = $this->model->authentificate($email, $password)) != FALSE) {
+
+                    //open session with param $user
+
                     $this->redirect('/dashboard');
                 }
 
                 $validator->addCustomError('badCredentials', 'Identifiants incorrects');
             }
         }
-
 
         $this->twig->display('user/login.html.twig');
     }
@@ -65,9 +73,13 @@ class User extends BaseController
      */
     public function show($idUser) {
 
-        $user = $this->model->loadById($idUser);
+        $this->model->init();
 
-        $this->twig->display('user/show.html.twig', array('user' => $user));
+        $this->twig->display('user/show.html.twig', array(
+            'user' => $this->model->loadById($idUser)
+        ));
+
+        $this->model->close();
     }
 
     /**
@@ -76,8 +88,12 @@ class User extends BaseController
      * @param int $idUser The usr id
      */
     public function edit($idUser) {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST' and !empty($_POST)) {
 
+        $this->model->init();
+
+        // test d'égalité uri<->form pour plus de sécurité
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' and $_POST['idUser'] == $idUser) {
+            
             require_once './core/validator.php';
             $validator = Validator::getInstance();
 
@@ -86,7 +102,15 @@ class User extends BaseController
 
             if ($validator->run()) {
 
-                $data = array(); // donnees utilisateur
+                $data = array(
+                    'idUser' => $idUser,
+                    'firstname' => ucwords(strtolower($_POST['firstname'])),
+                    'lastname' => strtoupper($_POST['lastname']),
+                    'roles' => json_encode($_POST['roles']),
+                ); 
+                
+                var_dump($data);
+                $this->model->save($data);
 
                 if (TRUE) { // sauvegarde utilisateur
                     //success
@@ -96,9 +120,11 @@ class User extends BaseController
             }
         }
 
-        $user = $this->model->loadById($idUser);
+        $this->twig->display('user/edit.html.twig', array(
+            'user' => $this->model->loadById($idUser)
+        ));
 
-        $this->twig->display('user/edit.html.twig', array('user' => $user));
+        $this->model->close();
     }
 
     /**
@@ -110,6 +136,9 @@ class User extends BaseController
         return $this->model->deleteById($idUser);
     }
 
+    /**
+     * 
+     */
     public function add() {
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST' and !empty($_POST)) {
@@ -136,12 +165,22 @@ class User extends BaseController
         $this->twig->display('user/create.html.twig');
     }
 
+    /**
+     * 
+     */
     public function logout() {
 
-        $this->user->logout();
-        redirect('login');
+
+        // close session here
+        // $this->user->logout();
+
+
+        $this->redirect('/login');
     }
 
+    /**
+     * 
+     */
     public function register() {
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST' and !empty($_POST)) {
@@ -155,10 +194,12 @@ class User extends BaseController
 
             if ($validator->run()) {
 
-                if (!$this->model->uniqueEmail($_POST['email'])) {
-                    
+                $email = strtolower($_POST['email']);
+                $password = md5($_POST['password'] . $email);
+
+                if (!$this->model->uniqueEmail($email)) {
+
                     $validator->addCustomError('uniqueEmail', 'Cet adresse email est déjà utilisée');
-                    
                 } else {
 
                     $data = array(); // donnees utilisateur
