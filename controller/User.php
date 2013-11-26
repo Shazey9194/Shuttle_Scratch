@@ -221,12 +221,16 @@ class User extends BaseController
                     'password' => $password
                 );
 
-                if ($this->model->save($data)) { // sauvegarde utilisateur
-                    //success
+                if ($this->model->save($data)) {
+                    $this->twig->display('info/registerSuccess.html.twig', array(
+                        'email' => $data['email']
+                    ));
+                    
                 } else {
-                    //erreur
+                    $this->twig->display('info/registerFailure.html.twig');
                 }
-                die;
+                
+                exit;
             }
         }
 

@@ -24,11 +24,6 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: normal;
 }
 
-h2 {
-    margin: 40px 0;
-    font-size: 32px;
-}
-
 textarea {
     resize: none; /* Prevents chrome from allow resize*/
 }
@@ -308,44 +303,39 @@ section.well > h3 {
     transition: border-color ease-in-out .15s;
 }
 
-/* Huge Form responsive
+/* Jumbotron
 ===========================================================*/
 @media (min-width: 992px) {
-    .huge-form {
+    .jumbotron {
         margin-top: 100px;
         margin-bottom: 150px;
     }
 }
 
-.huge-form {
+.jumbotron {
+    font-size: inherit;
     color: #d0d0d0;
-}
-
-.huge-form a {
-    color: #d0d0d0;
-
-}
-.huge-form a:hover,
-.huge-form a:focus {
-    color: #7acc37;
-}
-
-/* Register form
-===========================================================*/
-#register-form {
-    color: #d0d0d0;
-}
-
-#register-form h2 {
-    margin-top: 0;
-}
-
-/* Jumbotron
-===========================================================*/
-.container .jumbotron {
     background: transparent;
     padding: 0;
     color: #d0d0d0;
+}
+
+.jumbotron h1 {
+    margin: 0 0 40px 0;
+}
+
+.jumbotron h2 {
+    font-size: 32px;
+    margin: 0 0 20px 0;
+}
+
+.jumbotron a {
+    color: #d0d0d0;
+
+}
+.jumbotron a:hover,
+.jumbotron a:focus {
+    color: #7acc37;
 }
 
 /* Home demo

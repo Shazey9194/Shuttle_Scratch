@@ -1,0 +1,24 @@
+{% extends "user/login.html.twig" %}
+
+{% block content %}
+<div class="container">
+    <div class="jumbotron" method="post">
+        <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+                <h1><i class="fa-check"></i>&nbsp;Bienvenue</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+                <p>Votre compte à bien été crée et un email d'activation vous a été envoyé à l'adresse <strong>{{ email }}</strong>. Cliquez sur le lien d'activation qu'il contient pour valider votre inscription.</p>
+                <p>À bientôt sur Shuttle !</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-xs-12" style="text-align: center;">
+                Votre compte est validé ? <a href="/login" class="dynamic">Identifiez-vous</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
