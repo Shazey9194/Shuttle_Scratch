@@ -1,4 +1,7 @@
 <?php
+
+require_once './Controller/BaseController.php';
+
 /**
  * The dasboard controller
  * 
@@ -16,15 +19,16 @@ class Dashboard extends BaseController
      */
     public function __construct() {
         parent::__construct();
+        Session::run();
     }
 
     /**
      * The controller index
      */
     public function index() {
-		$sessionData = Session::getInstance();
-		$sessionData = $sessionData->getData();
-        $this->twig->display('dashboard/overview.html.twig', array('session' => $sessionData));
+        $this->twig->display('dashboard/overview.html.twig', array(
+            'session' => $_SESSION
+        ));
     }
 
     public function add() {

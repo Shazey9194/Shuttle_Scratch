@@ -1,15 +1,11 @@
 <?php
 require_once './Controller/BaseController.php';
-Session::run();
 
 /**
  * The dasboard controller
  * 
  * @author Alex Maxime CADEVALL <a.cadevall@insta.fr>
  */
-
-require_once './Controller/BaseController.php';
-Session::run();
 
 class Settings extends BaseController{
 	
@@ -18,6 +14,7 @@ class Settings extends BaseController{
      */
     public function __construct() {
         parent::__construct();
+        Session::run();
     }
 
     /**

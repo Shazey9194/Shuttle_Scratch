@@ -38,7 +38,7 @@ abstract class BaseController
         Twig_Autoloader::register();
         $loader = new Twig_Loader_Filesystem('./view');
         $this->twig = new Twig_Environment($loader, array('debug' => true));
-		$this->twig->addExtension(new Twig_Extension_Debug());
+        $this->twig->addExtension(new Twig_Extension_Debug());
 
         $this->extend();
     }
@@ -77,11 +77,13 @@ abstract class BaseController
     abstract public function delete($id);
 
     /**
+     * Perform a inner-domain header redirection
+     * This can not redirect cross-domain
      * 
-     * @param type $request
+     * @param string $request The inner-domain request uri
      */
     protected function redirect($request) {
-        header('location: .' . $request);
+        header('location: http://' . $_SERVER['SERVER_NAME'] . $request);
         exit;
     }
 
@@ -128,8 +130,8 @@ abstract class BaseController
                     }
                 });
 
-        $functions[] = new Twig_SimpleFunction('isGranted', function($role) {
-                    return in_array($role, $this->session->userdata('roles'));
+        $functions[] = new Twig_SimpleFunction('isGranted', function() {
+                    return FALSE;
                 });
 
         foreach ($functions as $function) {

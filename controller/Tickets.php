@@ -1,26 +1,24 @@
 <?php
+require_once './Controller/BaseController.php';
+
 /**
  * The dasboard controller
  * 
  * @author Alex Maxime CADEVALL <a.cadevall@insta.fr>
  */
-
-require_once './Controller/BaseController.php';
-Session::run();
-
 class Tickets extends BaseController{
 
 	/*
 	 * Constructor
 	 */
 	public function __construct() {
-		parent::__construct('TicketsModel');
+		parent::__construct();
+                Session::run();
 	}
 
-	/**
-     * The controller index
-     * Load default view
-     */
+	/*
+	 * index view
+	 */
 	 public function index() {
 		 $this->twig->display('tickets/overview.html.twig');
 	 }
