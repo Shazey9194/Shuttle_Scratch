@@ -26,9 +26,11 @@
 
 {% block content %}
 <div class="container">
-    <form id="login-form" class="huge-form" method="post">
-        <div class="jumbotron col-md-offset-2 col-md-8">
-            <h1><i class="fa-rocket"></i>&nbsp;Shuttle</h1>
+    <form id="login-form" class="jumbotron" method="post">
+        <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+                <h1><i class="fa-rocket"></i>&nbsp;Shuttle</h1>
+            </div>
         </div>
         <div class="row">
             <div class="form-group col-md-offset-2 col-md-4">
@@ -56,7 +58,7 @@
         </div>
         <div class="row">
             <div class="form-group col-xs-12" style="text-align: center;">
-                Vous n'avez pas de compte ? <a href="register" class="dynamic">Inscrivez-vous</a>
+                Vous n'avez pas de compte ? <a href="/register" class="dynamic">Inscrivez-vous</a> | <a href="/recover" class="dynamic">Mot de passe oublié</a>
             </div>
         </div>
     </form>
