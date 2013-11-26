@@ -33,15 +33,15 @@ class UserModel extends BaseModel
         return $auth->fetch();
     }
 
-    public function uniqueEmail($email) {
+    public function existEmail($email) {
 
         $sql = $this->select(array('email'))
                 ->where(array('email = :email'))
                 ->buildQuery();
-        $auth = $this->db->prepare($sql);
-        $auth->execute(array(':email' => $email));
+        $existeEmail = $this->db->prepare($sql);
+        $existeEmail->execute(array(':email' => $email));
 
-        return !$auth->fetch();
+        return $existeEmail->fetch();
     }
 
 }

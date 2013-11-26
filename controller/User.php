@@ -23,7 +23,7 @@ class User extends BaseController
      * 
      */
     public function index() {
-        
+
         Session::run();
 
         $this->model->init();
@@ -78,13 +78,13 @@ class User extends BaseController
      * @param int $idUser The user id
      */
     public function show($idUser) {
-        
+
         Session::run();
-        
+
         $this->model->init();
-        
+
         $user = $this->model->loadById($idUser);
-        if(empty($user)) {
+        if (empty($user)) {
             $this->redirect('/user');
         }
 
@@ -101,13 +101,13 @@ class User extends BaseController
      * @param int $idUser The usr id
      */
     public function edit($idUser) {
-        
+
         Session::run();
-        
+
         $this->model->init();
-        
+
         $user = $this->model->loadById($idUser);
-        if(empty($user)) {
+        if (empty($user)) {
             $this->redirect('/user');
         }
 
@@ -158,9 +158,9 @@ class User extends BaseController
      * 
      */
     public function add() {
-        
+
         Session::run();
-        
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST' and !empty($_POST)) {
 
             require_once './core/validator.php';
@@ -168,7 +168,7 @@ class User extends BaseController
 
             $validator->addRules('firstname', 'maxlength[45]')
                     ->addRules('lastname', 'maxlength[45]')
-                    ->addRules('email', 'required|email|maxlenght[255]');
+                    ->addRules('email', 'required|email|maxlength[255]');
 
             if ($validator->run()) {
 
@@ -205,7 +205,7 @@ class User extends BaseController
             require_once './core/validator.php';
             $validator = Validator::getInstance();
 
-            $validator->addRules('email', 'required|email|maxlenght[255]')
+            $validator->addRules('email', 'required|email|maxlength[255]|uniqueEmail')
                     ->addRules('password', 'required|maxlength[24]')
                     ->addRules('confirm', 'match[password]');
 
@@ -214,19 +214,19 @@ class User extends BaseController
                 $email = strtolower($_POST['email']);
                 $password = md5($_POST['password'] . $email);
 
-                if (!$this->model->uniqueEmail($email)) {
+                $this->model->init();
 
-                    $validator->addCustomError('uniqueEmail', 'Cet adresse email est déjà utilisée');
+                $data = array(
+                    'email' => $email,
+                    'password' => $password
+                );
+
+                if ($this->model->save($data)) { // sauvegarde utilisateur
+                    //success
                 } else {
-
-                    $data = array(); // donnees utilisateur
-
-                    if (TRUE) { // sauvegarde utilisateur
-                        //success
-                    } else {
-                        //erreur
-                    }
+                    //erreur
                 }
+                die;
             }
         }
 
