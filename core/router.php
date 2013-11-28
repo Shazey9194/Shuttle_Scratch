@@ -61,6 +61,7 @@ class Router
      * @param Route $route The route to add
      */
     public function addRoute(Route $route) {
+     
         if (!in_array($route, $this->routes)) {
             $this->routes[] = $route;
         }
@@ -73,7 +74,6 @@ class Router
      * @throws \RuntimeException
      */
     public function findRoute($request) {
-
         foreach ($this->routes as $route) {
 
             if (($values = $route->match($request)) !== FALSE) {
@@ -105,16 +105,20 @@ class Router
         $xml = new \DOMDocument;
         $xml->load('./config/routes.xml');
 
+       
         $routes = $xml->getElementsByTagName('route');
-
+   
         foreach ($routes as $route) {
             $params = array();
 
             if ($route->hasAttribute('params')) {
                 $params = explode(',', $route->getAttribute('params'));
             }
-
+            
+            
+     
             $this->addRoute(new Route($route->getAttribute('pattern'), $route->getAttribute('controller'), $route->getAttribute('action'), $params));
+            
         }
     }
 
@@ -124,7 +128,7 @@ class Router
      */
     public function run() {
         try {
-            $matchedRoute = $this->findRoute($this->request);
+          $matchedRoute = $this->findRoute($this->request);
         } catch (\RuntimeException $e) {
             echo 404;
             die;
@@ -217,6 +221,8 @@ class Route
         if (is_string($pattern)) {
             $this->pattern = $pattern;
         }
+        
+      
     }
 
     /**
@@ -235,6 +241,7 @@ class Route
         if (is_string($controller)) {
             $this->controller = $controller;
         }
+        
     }
 
     /**
