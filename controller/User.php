@@ -11,7 +11,7 @@ class User extends BaseController
 {
 
     /**
-     * Construct
+     * Constructor
      * 
      */
     public function __construct() {
@@ -20,7 +20,7 @@ class User extends BaseController
 
     /**
      * The controller index
-     * 
+     * Load default view
      */
     public function index() {
 
@@ -151,7 +151,9 @@ class User extends BaseController
      */
     public function delete($idUser) {
         Session::run();
-        return $this->model->deleteById($idUser);
+		$this->model->init();
+        return true;//$this->model->deleteById($idUser);
+		$this->model->close();
     }
 
     /**
