@@ -7,40 +7,47 @@ require_once './Controller/BaseController.php';
  * 
  * @author Alex Maxime CADEVALL <a.cadevall@insta.fr>
  */
-class Dashboard extends BaseController
-{
+require_once './Controller/BaseController.php';
+Session::run();
 
-    /**
-     * Constructor
-     */
-    public function __construct() {
-        parent::__construct();
-        Session::run();
-    }
+class Dashboard extends BaseController {
 
-    /**
-     * The controller index
-     */
-    public function index() {
-        $this->twig->display('dashboard/overview.html.twig', array(
-            'session' => $_SESSION
-        ));
-    }
+	/**
+	 * Constructor
+	 */
+	public function __construct() {
+		parent::__construct('UserModel');
+		Session::run();
+	}
 
-    public function add() {
-        //to do
-    }
+	/**
+	 * The controller index
+	 */
+	public function index() {
+		$this->model->init();
+		$idData = Session::getUserData();
+		$user = $this->model->loadUserData($idData['idUser']);
+		$user['roles'] = json_decode($user['roles']);
+		$this->twig->display('dashboard/overview.html.twig', array(
+			'userData' => $user
+		));
+		$this->model->close();
+	}
 
-    public function delete($id) {
-        //to do
-    }
+	public function add() {
+		//to do
+	}
 
-    public function edit($id) {
-        //to do
-    }
+	public function delete($id) {
+		//to do
+	}
 
-    public function show($id) {
-        //to do
-    }
+	public function edit($id) {
+		//to do
+	}
+
+	public function show($id) {
+		//to do
+	}
 
 }

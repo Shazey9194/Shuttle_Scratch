@@ -1,11 +1,11 @@
 {% extends "layout.html.twig" %}
-
+{% block title %}Gestion des tickes{% endblock %}
 {% set navtab = 'tickets' %}
 
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-10">
             <section class="well">
                 <h3>Mes tickets</h3>
                 {% for ticket in ticketAssignedToMe %}
@@ -22,9 +22,61 @@
 
             </section>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <a class="btn btn-lg btn-block btn-primary" href="{{ domain() }}tickets/create">Ouvrir un ticket</a>
         </div>
     </div>
+
+    <div class="row">
+		<div class="col-md-10">
+			<section class="well">
+				<h3>Derniers tickets ouvert</h3>
+				<div class="table-responsive">
+					<table class="table table-hover table-striped">
+						<tr>
+							<th style="width: 80px;"># Ticket</th>
+							<th>Titre</th>
+							<th>Auteur</th>
+							<th style="width: 20px;">Actions</th>
+						</tr>
+                {% for ticket in ticketList %}
+						<tr>
+							<td><a href="{{ domain() }}tickets/{{ ticket.idTicket }}/show">#{{ ticket.idTicket }}</a></td>
+							<td><a href="{{ domain() }}tickets/{{ ticket.idTicket }}/show">{{ ticket.title }}</a></td>
+							<td><a href="{{ domain() }}tickets/{{ ticket.idTicket }}/show">{{ [ticket.lastname|capitalize, ticket.firstname|capitalize]|join(' ') }}</a></td>
+							<td>
+								<a href="{{ domain() }}tickets/{{ ticket.idTicket }}/show"><i class="fa-eye"></i></a>
+								<a href="{{ domain() }}tickets/{{ ticket.idTicket }}/edit"><i class="fa-edit"></i></a>
+								<a href="{{ domain() }}tickets/{{ ticket.idTicket }}/delete"><i class="fa-times"></i></a>
+							</td>
+						</tr>
+                {% endfor %}
+					</table>
+				</div>
+			</section>
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block extras %}
+
+<div id="home-demo">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="page-header">
+					<h3>Qu'est ce que Shuttle ?</h3>
+				</div>
+				<p>
+					Shuttle est une solution web libre de gestion de Support. Il est destiné à des services de HelpDesk, multi-techniciens ou pas.
+					Cette outil permet de centraliser, classifier, vos demandes et incidents par l'intermédiaire de tickets, 
+					vous permettant ainsi d'informer en temps réel vos collaborateurs.
+					<br />
+					Au fur et à mesure de la création de vos incidents vous mettez en place une base de connaissance, 
+					qui vous permettra de trouver rapidement des réponses à vos demandes.
+				</p>
+			</div>
+		</div>
+	</div>
 </div>
 {% endblock %}

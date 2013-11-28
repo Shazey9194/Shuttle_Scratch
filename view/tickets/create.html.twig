@@ -12,8 +12,8 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="title">Intitulé</label>
-                            <input type="text" class="form-control" id="title" name="title" value="{{ setValue('title')|raw }}" placeholder="Nouveau ticket">
-                            {{ formError('title')|raw }}
+                            <input type="text" class="form-control" id="title" name="title" value="{{ setValue('title') }}" placeholder="Nouveau ticket">
+                            {{ formError('title') }}
                         </div>
                         <div class="form-group col-md-4">
                             <label for="type">Type de demande</label>
@@ -23,16 +23,17 @@
                                 <option value="{{ type.idTicketType }}" {{ set_select('type', type.idTicketType) }}>{{ type.label|capitalize }}</option>
                                 {% endfor %}
                             </select>
-                            {{ formError('type')|raw }}
+                            {{ formError('type') }}
                         </div>
 						{% if isGranted('admin') or isGranted('team') %}
                         <div class="form-group col-md-2">
                             <label for="level">Importance</label>
                             <select class="form-control" id="level" name="level">
-                                <option value="Urgent">Urgent</option>
-                                <option value="Haut">Haut</option>
-                                <option value="Normal" selected>Normal</option>
-                                <option value="Bas">Bas</option>
+                                <option value="5">Urgent</option>
+                                <option value="4">Haut</option>
+                                <option value="3" selected>Normal</option>
+                                <option value="2">Bas</option>
+                                <option value="1">Négligeable</option>
                             </select>
                         </div>
 						{% endif %}
@@ -67,32 +68,40 @@
                                 <label for="estimatedTime">Temps estimé</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="estimatedTime" name="estimatedTime">
-                                    <span class="input-group-addon">min</span>
+                                    <span class="input-group-addon">Jours</span>
                                 </div>
                             </div>
                         </div>
                     </fielset>
 					{% endif %}
-                    <div class="form-group">
-                        <label for="exampleInputFile">Joindre un fichier</label>
-                        <input type="file" id="exampleInputFile">
-                    </div>
-                    <button type="submit" class="btn btn-primary">{% if isGranted('admin') or isGranted('team') %}Ajouter{% else %}Soumettre{% endif %}</button>
+                    <button type="submit" class="btn btn-primary">{% if isGranted('admin') or isGranted('team') %} Ajouter {% else %} Soumettre {% endif %}</button>
                 </section>
             </div>
 			{% if isGranted('admin') or isGranted('team') %}
             <div class="col-md-3">
                 <section class="well">
                     <h3>Projet</h3>
-
+					<label for="type">Projet associé</label>
+					<select class="form-control" id="type" name="idProjet">
+						<option value="">Choisir un projet</option>
+						{% for projet in projets %}
+						<option value="{{ projet.idProject }}" {{ set_select('idProjet', projet.idProject) }}>{{ projet.name|capitalize }}</option>
+						{% endfor %}
+					</select>
+					{{ formError('idProjet') }}
                 </section>
 
                 <section class="well">
                     <h3>Equipe</h3>
                     <div class="form-group">
-                        <label for="exampleInputPassword1">Assigner à</label>
-                        <select class="form-control" id="exampleInputPassword1">
+                        <label for="exampleInputPassword1">Assigné à</label>
+                        <select class="form-control" id="exampleInputPassword1" name="assignedTo">
                             <option value="">Choisir un membre d'équipe</option>
+							{% for teamMember in teams %}
+							<option value="{{ teamMember.idUser }}" {{ set_select('assignedTo', teamMember.idUser) }}>{{ [teamMember.lastname|capitalize, teamMember.firstname|capitalize]|join(' ') }}</option>
+							{% endfor %}
+						</select>
+						{{ formError('assignedTo') }}
                         </select>
                     </div>
                 </section>
