@@ -15,6 +15,7 @@ class Company extends BaseController{
 	 */
 	public function __construct() {
 		parent::__construct();
+                Session::run();
 	}
 
 	public function index() {

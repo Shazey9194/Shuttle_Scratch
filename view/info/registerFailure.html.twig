@@ -1,0 +1,23 @@
+{% extends "user/login.html.twig" %}
+
+{% block content %}
+<div class="container">
+    <div class="jumbotron" method="post">
+        <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+                <h1><i class="fa-times"></i>&nbsp;Catastrophe !</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+                <p>Une erreur est survenue lors de votre inscription nous empechant de créer votre compte. Nous nous excusons pour de dérangement et faisons de notre mieux pour tenter de rétablir le service au plus vite.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-xs-12" style="text-align: center;">
+                Besoin d'aide ? <a href="/help" class="dynamic">Contacter le support</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

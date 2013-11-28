@@ -15,14 +15,16 @@ class Dashboard extends BaseController
      */
     public function __construct() {
         parent::__construct();
+        Session::run();
     }
 
     /**
      * The controller index
      */
     public function index() {
-
-        $this->twig->display('dashboard/overview.html.twig');
+        $this->twig->display('dashboard/overview.html.twig', array(
+            'session' => $_SESSION
+        ));
     }
 
     public function add() {

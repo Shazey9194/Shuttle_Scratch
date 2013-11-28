@@ -10,9 +10,7 @@ class Projects extends BaseController{
 
 	public function __construct() {
 		parent::__construct();
-		//$this->load->library('twig');
-		//$this->twig->ci_function_init();
-		//$this->load->model('project_model', 'project');
+		Session::run();
 	}
 
 	public function index() {

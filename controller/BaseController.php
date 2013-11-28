@@ -11,19 +11,34 @@ abstract class BaseController
 {
 
     /**
-     *
-     * @var \Twig_Environment The twig environment
+     * The twig environment
+     * 
+     * @var \Twig_Environment
      */
     protected $twig;
+
+    /**
+     * The main controller model
+     *
+     * @var \BaseModel
+     */
+    protected $model = null;
 
     /**
      * Construct
      * 
      */
-    protected function __construct() {
+    protected function __construct($model = null) {
+
+        if (null != $model) {
+            require_once './model/' . $model . '.php';
+            $this->model = new $model();
+        }
+
         Twig_Autoloader::register();
         $loader = new Twig_Loader_Filesystem('./view');
-        $this->twig = new Twig_Environment($loader);
+        $this->twig = new Twig_Environment($loader, array('debug' => true));
+        $this->twig->addExtension(new Twig_Extension_Debug());
 
         $this->extend();
     }
@@ -62,6 +77,17 @@ abstract class BaseController
     abstract public function delete($id);
 
     /**
+     * Perform a inner-domain header redirection
+     * This can not redirect cross-domain
+     * 
+     * @param string $request The inner-domain request uri
+     */
+    protected function redirect($request) {
+        header('location: http://' . $_SERVER['SERVER_NAME'] . $request);
+        exit;
+    }
+
+    /**
      * 
      * @return void
      */
@@ -90,7 +116,7 @@ abstract class BaseController
                         }
                     }
                 });
-                
+
         $functions[] = new Twig_SimpleFunction('hasError', function ($field) {
                     if (class_exists('Validator')) {
                         $validator = Validator::getInstance();
@@ -104,9 +130,10 @@ abstract class BaseController
                     }
                 });
 
-        $functions[] = new Twig_SimpleFunction('isGranted', function() {
-                    return FALSE;
-                });
+       $functions[] = new Twig_SimpleFunction('isGranted', function($roles) {
+					$sessiondata = Session::getUserData();
+					return in_array($roles, $sessiondata["roles"]);
+				});
 
         foreach ($functions as $function) {
             $this->twig->addFunction($function);

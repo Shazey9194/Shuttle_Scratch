@@ -117,8 +117,8 @@ class Validator
         foreach ($this->rules as $field => $rules) {
             $rules = explode('|', $rules);
 
-            if (isset($_POST[$field]) and trim($_POST[$field]) != '') {
-                $value = trim($_POST[$field]);
+            if (isset($_POST[$field])) {
+                $value = $_POST[$field];
 
                 foreach ($rules as $rule) {
                     if ($rule != 'required') {
@@ -197,9 +197,7 @@ class Validator
      * @param mixed $message The custom error message
      */
     public function addCustomError($name, $message) {
-        if (!in_array($name, array_keys($this->rules))) {
-            $this->errors[$name] = $message;
-        }
+        $this->errors[$name] = $message;
     }
 
     /**
@@ -220,23 +218,23 @@ class Validator
     public function getError($field) {
         return in_array($field, array_keys($this->errors)) ? $this->errors[$field] : FALSE;
     }
-    
+
     /**
      * Return true if the validator has errors
      * 
      * @return boolean
      */
-    public function hasErrors(){
+    public function hasErrors() {
         return !empty($this->errors);
     }
-    
+
     /**
      * Return true if the validator has an error for that field
      * 
      * @param string $field The field name
      * @return boolean
      */
-    public function hasError($field){
+    public function hasError($field) {
         return in_array($field, array_keys($this->errors));
     }
 
@@ -294,7 +292,7 @@ class Validator
     /**
      * Check valid ip address
      * 
-     * @param mixed $value The ip address
+     * @param string $value The ip address
      * @return boolean
      */
     private function ip($value) {
@@ -304,11 +302,26 @@ class Validator
     /**
      * Check valid email address
      * 
-     * @param mixed $value The email address
+     * @param string $value The email address
      * @return boolean
      */
     private function email($value) {
         return filter_var($value, FILTER_VALIDATE_EMAIL);
+    }
+
+    /**
+     * Check if email address is already taken
+     * 
+     * @param string $value The email address
+     * @return boolean
+     */
+    private function uniqueEmail($value) {
+
+        require_once './model/UserModel.php';
+        $model = new UserModel();
+        $model->init();
+        
+        return !$model->existEmail($value);
     }
 
     /**

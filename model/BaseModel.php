@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The base model
  * 
@@ -68,8 +69,6 @@ abstract class BaseModel
 
         $this->table = $table;
         $this->primaryKey = $primaryKey;
-
-        $this->init();
     }
 
     /**
@@ -78,7 +77,7 @@ abstract class BaseModel
      * @return void
      * @throws Exception PDOException
      */
-    protected function init() {
+    public function init() {
 
         try {
             $this->db = new PDO('mysql:host=' . $this->config['host'] . ';dbname=' . $this->config['database'], $this->config['user'], $this->config['password']);
@@ -91,11 +90,83 @@ abstract class BaseModel
     }
 
     /**
+     * 
+     * @param type $id
+     */
+    public function loadById($id, $columns = array()) {
+        $sql = $this->select($columns)
+                ->where(array($this->primaryKey . ' = :id'))
+                ->buildQuery();
+
+        $loadById = $this->db->prepare($sql);
+        $loadById->execute(array(':id' => $id));
+        return $loadById->fetch();
+    }
+
+    /**
+     * 
+     */
+    public function loadAll($columns = array()) {
+        $sql = $this->select($columns)
+                ->buildQuery();
+
+        $loadAll = $this->db->prepare($sql);
+        $loadAll->execute();
+        return $loadAll->fetchAll();
+    }
+
+    /**
+     * 
+     */
+    public function loadWhere($clause = array(), $columns = array()) {
+        $sql = $this->select($columns)
+                ->where($clause)
+                ->buildQuery();
+
+        $loadWhere = $this->db->prepare($sql);
+        $loadWhere->execute();
+        return $loadWhere->fetchAll();
+    }
+
+    /**
+     * 
+     * @param type $data
+     * @param type $table
+     */
+    public function save($data, $table = null) {
+
+        if (in_array($this->primaryKey, array_keys($data))) {
+            $sql = 'UPDATE ';
+            $sql .= $table != null ? $table : $this->table;
+            $sql .= ' SET ';
+
+            $columns = array_keys($data);
+            foreach ($columns as $column) {
+                if ($column != $this->primaryKey) {
+                    $sql .= $column . ' = :' . $column;
+                    if (end($columns) != $column) {
+                        $sql .= ', ';
+                    }
+                }
+            }
+            $sql .= ' WHERE ' . $this->primaryKey . ' = :' . $this->primaryKey;
+        } else {
+            $sql = 'INSERT INTO ';
+            $sql .= $table != null ? $table : $this->table;
+            $sql .= ' (' . implode(',', array_keys($data)) . ') VALUES (:' . implode(',:', array_keys($data)) . ')';
+        }
+
+        $insert = $this->db->prepare($sql);
+
+        return $insert->execute($data);
+    }
+
+    /**
      * Unset PDO Objects
      * 
      * @return void
      */
-    protected function close() {
+    public function close() {
 
         $this->db = NULL;
     }
@@ -104,7 +175,7 @@ abstract class BaseModel
      * 
      * @return string $sql The SQL query
      */
-    public function buildQuery() {
+    protected function buildQuery() {
 
         if ($this->query['select'] != '') {
             $sql = 'SELECT ' . $this->query['select'];
@@ -135,7 +206,7 @@ abstract class BaseModel
      * 
      * @param array $columns
      */
-    public function select($columns = array()) {
+    protected function select($columns = array()) {
 
         if (!empty($columns)) {
 
@@ -154,7 +225,7 @@ abstract class BaseModel
      * 
      * @param array $tables
      */
-    public function from($tables = array()) {
+    protected function from($tables = array()) {
 
         if (!empty($tables)) {
 
@@ -174,7 +245,7 @@ abstract class BaseModel
      * @param string $table The joined table
      * @param string $ref The reference clause
      */
-    public function join($table = null, $ref = null) {
+    protected function join($table = null, $ref = null) {
 
         if (!is_null($table) and !is_null($ref)) {
 
@@ -189,7 +260,7 @@ abstract class BaseModel
      * 
      * @param array $clauses
      */
-    public function where($clauses = array(), $logic = 'AND') {
+    protected function where($clauses = array(), $logic = 'AND') {
 
         if (!empty($clauses)) {
 
@@ -209,7 +280,7 @@ abstract class BaseModel
      * @param array $columns The ordered columns
      * @param string The ordering way
      */
-    public function orderBy($columns = array(), $way = 'ASC') {
+    protected function orderBy($columns = array(), $way = 'ASC') {
 
         if (!empty($columns)) {
             $this->query['orderBy'] = ' ORDER BY ' . implode(',', $columns) . ' ' . $way;
@@ -224,7 +295,7 @@ abstract class BaseModel
      * @param int $offet The query offset
      * @param int $limit The query limit
      */
-    public function limit($offset = 0, $limit = 1) {
+    protected function limit($offset = 0, $limit = 1) {
 
         if ($limit > 0 and $offset >= 0) {
             $this->query['limit'] = ' LIMIT ' . $offset . ', ' . $limit;
@@ -232,6 +303,5 @@ abstract class BaseModel
 
         return $this;
     }
-
 
 }

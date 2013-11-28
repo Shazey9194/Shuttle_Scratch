@@ -19,7 +19,11 @@
                     <tr>
                         <td><input type="checkbox"></td>
                         <td><a href="{{ domain() }}user/{{ user.idUser }}/show">{{ user.email }}</a></td>
-                        <td><a href="{{ domain() }}user/{{ user.idUser }}/edit"><i class="fa-edit"></i></a></td>
+                        <td align="right">
+                            <a href="{{ domain() }}user/{{ user.idUser }}/show"><i class="fa-eye"></i></a>
+                            <a href="{{ domain() }}user/{{ user.idUser }}/edit"><i class="fa-edit"></i></a>
+                            <a href="{{ domain() }}user/{{ user.idUser }}/delete"><i class="fa-times"></i></a>
+                        </td>
                     </tr>
                 {% endfor %}
                 </table>

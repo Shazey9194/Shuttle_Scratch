@@ -8,6 +8,7 @@ body {
     background: #e9e9e9 url(../img/bg.png) no-repeat center top;
     /*background: #e9e9e9 url(../img/grid.png) repeat 0 0;*/
     font: 13px/1.7em 'Open Sans','Tahoma';
+    background-attachment: fixed;
 }
 
 @media (min-width: 1601px) {
@@ -21,11 +22,6 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0;
     font-family: 'Open Sans','Tahoma';
     font-weight: normal;
-}
-
-h2 {
-    margin: 40px 0;
-    font-size: 32px;
 }
 
 textarea {
@@ -307,44 +303,39 @@ section.well > h3 {
     transition: border-color ease-in-out .15s;
 }
 
-/* Huge Form responsive
+/* Jumbotron
 ===========================================================*/
 @media (min-width: 992px) {
-    .huge-form {
+    .jumbotron {
         margin-top: 100px;
         margin-bottom: 150px;
     }
 }
 
-.huge-form {
+.jumbotron {
+    font-size: inherit;
     color: #d0d0d0;
-}
-
-.huge-form a {
-    color: #d0d0d0;
-
-}
-.huge-form a:hover,
-.huge-form a:focus {
-    color: #7acc37;
-}
-
-/* Register form
-===========================================================*/
-#register-form {
-    color: #d0d0d0;
-}
-
-#register-form h2 {
-    margin-top: 0;
-}
-
-/* Jumbotron
-===========================================================*/
-.container .jumbotron {
     background: transparent;
     padding: 0;
     color: #d0d0d0;
+}
+
+.jumbotron h1 {
+    margin: 0 0 40px 0;
+}
+
+.jumbotron h2 {
+    font-size: 32px;
+    margin: 0 0 20px 0;
+}
+
+.jumbotron a {
+    color: #d0d0d0;
+
+}
+.jumbotron a:hover,
+.jumbotron a:focus {
+    color: #7acc37;
 }
 
 /* Home demo
@@ -356,7 +347,11 @@ section.well > h3 {
 }
 
 #home-demo h2 {
-    color: #7acc37;
+    color: rgb(122, 204, 55);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 1px rgba(255, 255, 255, 0.1);
+    margin: 40px 0px 20px;
+    padding-bottom: 20px;
 }
 
 #home-demo p {
