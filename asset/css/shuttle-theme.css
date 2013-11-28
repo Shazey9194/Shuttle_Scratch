@@ -143,7 +143,7 @@ section.well > h3 {
 #subnavbar ul {
     display: inline-block;
     padding: 0;
-    margin: 0 0 0 20px;
+    margin: 0;
     list-style: none;
     border-left: 1px solid #292929;
     border-right: 1px solid #4A4A4A;
@@ -467,6 +467,17 @@ body > footer a:hover {
 .row-error {
     margin-top: 0;
     margin-bottom: 12px;
+}
+
+.page-header-min {
+    border-bottom-color: #EEEEEE;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    margin-bottom: 10px;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 5px;
+    padding-bottom: 9px;
 }
 
 /*@media (min-width: 992px) {

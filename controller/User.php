@@ -151,7 +151,9 @@ class User extends BaseController
      */
     public function delete($idUser) {
         Session::run();
-        return $this->model->deleteById($idUser);
+		$this->model->init();
+        return true;//$this->model->deleteById($idUser);
+		$this->model->close();
     }
 
     /**

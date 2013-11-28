@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>{{ title }}</title>
+        <title>{% block title %}Shuttle - Simple ticket management{% endblock %}</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="{{ domain() }}asset/css/bootstrap.min.css">
@@ -76,6 +76,19 @@
         {% endblock %}
         </div>
 
+		{% if showdebug == 'true' %}
+			<div class="row">
+				<div class="col-md-12">
+					<section class="well">
+						<h3>Dev Area</h3>
+						<p>isGranted('client') => {% if isGranted('client') %}TRUE{% else %}FALSE{% endif %}</p>
+						<p>isGranted('team') => {% if isGranted('team') %}TRUE{% else %}FALSE{% endif %}</p>
+						<p>isGranted('admin') => {% if isGranted('admin') %}TRUE{% else %}FALSE{% endif %}</p>
+						<code><pre>{{ dump(dumps) }}</pre></code>
+					</section>
+				</div>
+			</div>
+		{% endif %}
         {% block extras %}
         <div id="home-demo">
             <div class="container">
@@ -147,5 +160,10 @@
             <script src="{{ domain() }}asset/js/jquery.min.js"></script>
             <script src="{{ domain() }}asset/js/bootstrap.min.js"></script>
         {% endblock %}
+				
+		{% if navtab == 'new' %}
+			<link rel="stylesheet" href="{{ domain() }}asset/css/datepicker.css">
+			<script src="{{ domain() }}asset/js/bootstrap-datepicker.js"></script>
+		{% endif %}
         </body>
     </html>
