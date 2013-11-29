@@ -164,6 +164,7 @@ class User extends BaseController
      * @param int $idUser The entity id
      */
     public function delete($idUser) {
+
         $this->restrict();
         $this->model->init();
         $this->model->deleteById($idUser);

@@ -14,7 +14,7 @@ class Tickets extends BaseController {
 
     public function __construct() {
         parent::__construct("TicketsModel");
-        Session::run();
+        $this->restrict();
     }
 
     /*
@@ -48,7 +48,7 @@ class Tickets extends BaseController {
 
             if ($validator->run()) {
                 $this->model->init();
-                $session = Session::getUserData();
+                $userdata = $this->session->getUserData();
                 $ticket = array(
                     'idTicket' => '',
                     'type' => $_POST['type'],
@@ -57,7 +57,7 @@ class Tickets extends BaseController {
                     'updateDate' => $_POST['startDate'],
                     'closeDate' => null,
                     'percent' => 0,
-                    'openBy' => $session['idUser'],
+                    'openBy' => $userdata['idUser'],
                     'assignedTo' => $_POST['assignedTo'],
                     'deadline' => $_POST['deadline'],
                     'estimatedTime' => $_POST['estimatedTime'],
@@ -326,87 +326,4 @@ class Tickets extends BaseController {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

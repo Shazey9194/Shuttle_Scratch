@@ -113,7 +113,7 @@ abstract class BaseController
         } else {
             header('location: http://' . $_SERVER['SERVER_NAME'] . $request);
         }
-        
+
         exit;
     }
 
@@ -208,7 +208,7 @@ abstract class BaseController
                 });
 
         $functions[] = new Twig_SimpleFunction('isGranted', function() {
-                    return FALSE;
+                    return true;
                 });
 
         foreach ($functions as $function) {
