@@ -71,5 +71,24 @@ class UserModel extends BaseModel
 
         return $existeEmail->fetch();
     }
+	public function loadUserData($idUser) {
+        $sql = $this->select(array('idUser', 'email', 'firstname', 'lastname', 'roles', 'state', 'company'))
+                ->where(array('idUser = :idUser'))
+                ->buildQuery();
+        $auth = $this->db->prepare($sql);
+        $auth->execute(array(':idUser' => $idUser));
 
+        return $auth->fetch();
+    }
+	
+	/**
+	 * 
+	 * @return array
+	 */
+	public function loadUserList() {
+		$query = $this->select()->from(array('user'))->buildQuery();
+		$result = $this->db->prepare($query);
+		$result->execute();
+		return $result->fetchAll();
+	}
 }

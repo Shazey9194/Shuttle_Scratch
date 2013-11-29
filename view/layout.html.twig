@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% block doctype %}<!DOCTYPE html>{% endblock %}
 <html>
     <head>
@@ -165,3 +166,174 @@
         {% endblock %}
     </body>
 </html>
+=======
+{% block doctype %}<!DOCTYPE html>{% endblock %}
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>{% block title %}Shuttle - Simple ticket management{% endblock %}</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="{{ domain() }}asset/css/bootstrap.min.css">
+        <link rel="stylesheet" href="{{ domain() }}asset/css/font-awesome.fix.min.css">
+        <link rel="stylesheet" href="{{ domain() }}asset/css/shuttle-theme.css">
+    </head>
+    <body>
+
+        {% block navbar %}
+        <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation">
+                        <span class="sr-only">Afficher la navigation</span>
+                        <span class="fa-reorder"></span>
+                    </button>
+                    <a class="navbar-brand" href="{{ domain() }}dashboard"><i class="fa-rocket"></i>&nbsp;Shuttle</a>
+                </div>
+                <div class="collapse navbar-collapse" id="navigation">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="{{ domain() }}settings"><i class="fa-wrench"></i>&nbsp;Préférences</a></li>
+                        <li><a href="{{ domain() }}logout"><i class="fa-sign-out"></i>&nbsp;Quitter</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        {% endblock %}
+
+        {% block subnavbar %}
+        <nav id="subnavbar" role="navigation">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8">
+                        <ul>
+                            <li{% if navtab == 'overview' %} class="active"{% endif %}><a href="{{ domain() }}dashboard"><i class="fa-eye"></i>Accueil</a></li>
+                            <li{% if navtab == 'history' %} class="active"{% endif %}><a href="{{ domain() }}history"><i class="fa-clock-o"></i>Historique</a></li>
+                            <li{% if navtab == 'tickets' %} class="active"{% endif %}><a href="{{ domain() }}tickets"><i class="fa-ticket"></i>Tickets</a></li>
+                            <li{% if navtab == 'projects' %} class="active"{% endif %}><a href="{{ domain() }}projects"><i class="fa-folder-o"></i>Projets</a></li>
+                            <li{% if navtab == 'users' %} class="active"{% endif %}><a href="{{ domain() }}user"><i class="fa-group"></i>Utilisateurs</a></li>
+                            <li{% if navtab == 'stats' %} class="active"{% endif %}><a href="{{ domain() }}stats"><i class="fa-bar-chart-o"></i>Statistiques</a></li>
+                            <li{% if navtab == 'new' %} class="active"{% endif %}><a href="{{ domain() }}tickets/create"><i class="fa-plus-circle"></i>Nouveau ticket</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row">
+                            <form class="col-xs-12" role="search">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Trouver un ticket">
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-default"><i class="fa-search"></i></button>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        {% endblock %}
+
+        {% block gathering %}
+        <div id="gathering">
+            <div>&nbsp;</div>
+        </div>
+        {% endblock %}
+
+        <div id="content" class="animated">
+        {% block content %}
+            <!-- content -->
+        {% endblock %}
+        </div>
+
+		{% if showdebug == 'true' %}
+			<div class="row">
+				<div class="col-md-12">
+					<section class="well">
+						<h3>Dev Area</h3>
+						<p>isGranted('client') => {% if isGranted('client') %}TRUE{% else %}FALSE{% endif %}</p>
+						<p>isGranted('team') => {% if isGranted('team') %}TRUE{% else %}FALSE{% endif %}</p>
+						<p>isGranted('admin') => {% if isGranted('admin') %}TRUE{% else %}FALSE{% endif %}</p>
+						<code><pre>{{ dump(dumps) }}</pre></code>
+					</section>
+				</div>
+			</div>
+		{% endif %}
+        {% block extras %}
+        <div id="home-demo">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h2>Qu'est ce que Shuttle ?</h2>
+                        <p>
+                            Shuttle est une solution web libre de gestion de Support. Il est destiné à des services de HelpDesk, multi-techniciens ou pas.
+                            Cette outil permet de centraliser, classifier, vos demandes et incidents par l'intermédiaire de tickets, 
+                            vous permettant ainsi d'informer en temps réel vos collaborateurs.
+                            <br />
+                            Au fur et à mesure de la création de vos incidents vous mettez en place une base de connaissance, 
+                            qui vous permettra de trouver rapidement des réponses à vos demandes.
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                            <h2>Prérequis</h2>
+                        <h5>Système d'exploitation : </h5>
+                        <p>Linux x86 (32 bits) and x86-64 (64 bits) with Apache 2.2 and Nginx web servers ; Windows x86 (32 bits) and x86-64 (64 bits), Windows 7, Windows 8, Windows Server 2008 R2, Windows XP SP3 ; Mac OS X</p>
+                        <h5>Les serveurs Web tournant avec : </h5>
+                        <p>Apache 2.x (Sous Windows, Mac et Linux) ; Nginx web server ; Microsoft IIS (version windows le supportant) ; Serveurs MySQL 5.5 or 5.6 server ; PHP</p>
+                        <h5>Les navigateurs suivant : </h5>
+                        <p>Google Chrome (recommandé) ; Mozilla Firefox (recommandé) ; Microsoft Internet Explorer 9 and 10 ; Apple Safari (recommandé)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+
+        {% block footer %}
+        <footer>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-2">
+                        <ul>
+                            <li class="list-title">Navigation</li>
+                            <li><a href="#">Accueil</a></li>
+                            <li><a href="#">Historique</a></li>
+                            <li><a href="#">Statistiques</a></li>
+                            <li><a href="#">Mes tickets</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-2">
+                        <ul>
+                            <li class="list-title">Aide</li>
+                            <li><a href="#">Faq</a></li>
+                            <li><a href="#">Documentation</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-2">
+                        <ul>
+                            <li class="list-title">A propos</li>
+                            <li><a href="#">Mentions légales</a></li>
+                            <li><a href="http://getbootstrap.com/" target="_blank">Bootstrap 3</a></li>
+                            <li><a href="http://fontawesome.io/">Font Awesome</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-offset-2 col-md-4">
+                        <h1 class="logo"><i class="fa-rocket"></i>&nbsp;Shuttle</h1>
+                        <p>Lorem ipsum dolor sit amet consectetur acipit velit. Laborem et dolor amet apicit.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        {% endblock %}
+
+        {% block scripts %}
+            <script src="{{ domain() }}asset/js/jquery.min.js"></script>
+            <script src="{{ domain() }}asset/js/bootstrap.min.js"></script>
+        {% endblock %}
+				
+		{% if navtab == 'new' %}
+			<link rel="stylesheet" href="{{ domain() }}asset/css/datepicker.css">
+			<script src="{{ domain() }}asset/js/bootstrap-datepicker.js"></script>
+		{% endif %}
+        </body>
+    </html>
+>>>>>>> bd14fcb1dfea292273f73a30bd5d3d024e69af83
