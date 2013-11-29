@@ -13,4 +13,5 @@
     <error rule="length" message="Le champ %f doit faire %p caractères"/>
     <error rule="greater" message="Le champ %f doit être plus grand que %p"/>
     <error rule="lesser" message="Le champ %f doit être plus petit que %p"/>
+    <error rule="validdate" message="La champ doit être une date au format jj/mm/AAAA (ex. : 15/07/1960)"/>
 </errors>
