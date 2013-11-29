@@ -208,7 +208,7 @@ abstract class BaseController
                 });
 
         $functions[] = new Twig_SimpleFunction('isGranted', function() {
-                    return FALSE;
+                    return true;
                 });
 
         foreach ($functions as $function) {

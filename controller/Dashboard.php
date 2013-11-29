@@ -10,7 +10,7 @@ class Dashboard extends BaseController
      */
     public function __construct() {
         parent::__construct('UserModel');
-        Session::run();
+        $this->restrict();
     }
 
     /**
@@ -18,7 +18,7 @@ class Dashboard extends BaseController
      */
     public function index() {
         $this->model->init();
-        $idData = Session::getUserData();
+        $idData = $this->session->getUserData();
         $user = $this->model->loadUserData($idData['idUser']);
         $user['roles'] = json_decode($user['roles']);
         $this->twig->display('dashboard/overview.html.twig', array(

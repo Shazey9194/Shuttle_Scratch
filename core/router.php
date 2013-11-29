@@ -126,7 +126,7 @@ class Router
         try {
             $matchedRoute = $this->findRoute($this->request);
         } catch (\RuntimeException $e) {
-            echo 404;
+			header('Location: http://'.$_SERVER['SERVER_NAME'] . '/404');
             die;
         }
 

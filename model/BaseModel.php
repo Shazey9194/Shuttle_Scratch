@@ -313,13 +313,16 @@ abstract class BaseModel
             $this->query['limit'] = ' LIMIT ' . $offset . ', ' . $limit;
         }
 
+		if ($limit > 0 and $offset >= 0) {
+			$this->query['limit'] = ' LIMIT ' . $offset . ', ' . $limit;
+		}
         return $this;
     }
 
     /**
      * 
      */
-    protected function flush() {
+    public function flush() {
         $this->query = array(
             'select' => '',
             'from' => '',
