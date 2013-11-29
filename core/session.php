@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 
 /**
@@ -6,35 +7,63 @@
  * <p>The session manager<p>
  * 
  * @author Alex Maxime CADEVALL <a.cadevall@insta.fr>
+ * @author Fabien MORCHOISNE <f.morchoisne@insta.fr>
  */
 class Session
 {
 
-    public static function start() {
+    /**
+     * The session alert messages
+     * 
+     * @var array 
+     */
+    private $flash;
+
+    /**
+     * The session userdata
+     * 
+     * @var array 
+     */
+    private $userdata;
+
+    /**
+     * Construct
+     * 
+     * @throws \RuntimeException
+     */
+    public function __construct() {
+
         if (session_start() != TRUE) {
             throw new \RuntimeException("Cannot initialize session ! \nYour system does not support Session !");
         }
+
+        $this->userdata = isset($_SESSION['userdata']) ? unserialize($_SESSION['userdata']) : array();
+        $this->flash = isset($_SESSION['flash']) ? unserialize($_SESSION['flash']) : array();
+        unset($_SESSION['flash']);
     }
 
     /**
-     * Set data we need to start
+     * Start a user session
      * 
-     * @param array $data Data to set session
+     * @param array $userdata The userdatas
      */
-    public static function startUserSession($userdata = NULL) {
-        if ($userdata != NULL and !empty($userdata)) {
-            self::setData($userdata);
-        }
+    public function startUserSession($userdata = array()) {
+        $now = new \DateTime();
+        $_SESSION['ipAddress'] = $_SERVER['REMOTE_ADDR'];
+        $_SESSION['browserInfo'] = $_SERVER['HTTP_USER_AGENT'];
+        $_SESSION['sessionDate'] = $now->format('Y-m-d H:i:s');
+        $_SESSION['userdata'] = serialize($userdata);
     }
 
     /**
-     * Destroy all session var and datas
+     * Destroy session
      * 
-     * @throws \RuntimeException Throw an exeption if cannot end session
+     * @throws \RuntimeException
      */
-    public static function endUserSession() {
+    public function endUserSession() {
         if (session_destroy()) {
             unset($_SESSION);
+            $this->userdata = array();
         } else {
             throw new \RuntimeException("Unable to end session \nRefresh the page and try to logout again");
         };
@@ -45,33 +74,21 @@ class Session
      * 
      * @return array
      */
-    public static function getUserData() {
-        return $_SESSION['userdata'];
+    public function getUserData() {
+        return unserialize($_SESSION['userdata']);
     }
 
     /**
-     * Set data
+     * Return The session user data
      * 
-     * @param array $userdata The user data
+     * @return array
      */
-    public static function setData($userdata) {
-        $now = new \DateTime();
-        $_SESSION['ipAddress'] = $_SERVER['REMOTE_ADDR'];
-        $_SESSION['browserInfo'] = $_SERVER['HTTP_USER_AGENT'];
-        $_SESSION['sessionDate'] = $now->format('Y-m-d H:i:s');
+    public function setUserData($userdata = array()) {
         $_SESSION['userdata'] = $userdata;
     }
 
     /**
-     * reset data var to empty array
-     * 
-     */
-    public static function unsetData() {
-        $_SESSION['userdata'] = array();
-    }
-
-    /**
-     * Check if we have data stored
+     * Check if sssion userdata exists
      * 
      * @return boolean
      */
@@ -82,13 +99,49 @@ class Session
     /**
      * Check for an opened user session
      * 
+     * @return boolean
      */
-    public static function run() {
+    public function isGranted($role = null) {
 
-        if (!isset($_SESSION['userdata'])) {
-            header('location: http://' . $_SERVER['SERVER_NAME'] . '/login');
-            exit;
+        if (!empty($this->userdata)) {
+
+            if ($role != null) {
+                return in_array($role, $this->userdata['roles']);
+            }
+
+            return TRUE;
+        } else {
+            return FALSE;
         }
+    }
+
+    /**
+     * Add a flash message to the session
+     * 
+     * @param string $type [info|success|warning|danger] The flash message type
+     * @param string $message The flash message
+     */
+    public function addFlash($message, $type = 'info') {
+        $this->flash[$type] = $message;
+        $_SESSION['flash'] = serialize($this->flash);
+    }
+
+    /**
+     * Return the session flash messages
+     * 
+     * @return void
+     */
+    public function getFlash() {
+        return $this->flash;
+    }
+
+    /**
+     * Clear the session flash messages
+     * 
+     * @return void
+     */
+    public function clearFlash() {
+        $this->flash = array();
     }
 
 }

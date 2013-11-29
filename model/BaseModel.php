@@ -7,8 +7,8 @@
  * @author Fabien Morchoisne <f.morchoisne@insta.fr>
  * @author Alex Maxime Cadevall <a.cadevall@insta.fr>
  */
-abstract class BaseModel {
-
+abstract class BaseModel
+{
     /**
      * The PDO instance
      * 
@@ -43,7 +43,7 @@ abstract class BaseModel {
 
     /**
      * Constructor
-     * 		
+     * 
      * @param string $table The DataBase table name <b>REQUIRED</b>
      * @param string $primaryKey The primary key field name <b>OPTIONAL</b>
      */
@@ -132,10 +132,10 @@ abstract class BaseModel {
      * @param type $id
      */
     public function deleteById($id) {
-
+        
         $sql = 'DELETE FROM ' . $this->table . ' WHERE ' . $this->primaryKey . ' = :id';
         $deleteById = $this->db->prepare($sql);
-
+        
         return $deleteById->execute(array(':id' => $id));
     }
 
@@ -266,60 +266,58 @@ abstract class BaseModel {
         return $this;
     }
 
-    /**
-     * Build a 'where' query
-     * 
-     * @param array $clauses
-     */
-    protected function where($clauses = array(), $logic = 'AND') {
+	/**
+	 * Build a 'where' query
+	 * 
+	 * @param array $clauses
+	 */
+	protected function where($clauses = array(), $logic = 'AND') {
 
-        if (!empty($clauses)) {
+		if (!empty($clauses)) {
 
-            if ($this->query['where'] != '') {
-                $this->query['where'] .= ' ' . $logic . ' ';
-            }
+			if ($this->query['where'] != '') {
+				$this->query['where'] .= ' ' . $logic . ' ';
+			}
 
-            $this->query['where'] .= '(' . implode(' AND ', $clauses) . ')';
-        }
+			$this->query['where'] .= '(' . implode(' AND ', $clauses) . ')';
+		}
 
+		return $this;
+	}
+
+	/**
+	 * Build an 'order by' query
+	 * 
+	 * @param array $columns The ordered columns
+	 * @param string The ordering way
+	 */
+	protected function orderBy($columns = array(), $way = 'ASC') {
+
+		if (!empty($columns)) {
+			$this->query['orderBy'] = ' ORDER BY ' . implode(',', $columns) . ' ' . $way;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Build a 'limit' query
+	 * 
+	 * @param int $offet The query offset
+	 * @param int $limit The query limit
+	 */
+	protected function limit($offset = 0, $limit = 1) {
+
+		if ($limit > 0 and $offset >= 0) {
+			$this->query['limit'] = ' LIMIT ' . $offset . ', ' . $limit;
+		}
         return $this;
     }
-
+    
     /**
-     * Build an 'order by' query
      * 
-     * @param array $columns The ordered columns
-     * @param string The ordering way
      */
-    protected function orderBy($columns = array(), $way = 'ASC') {
-
-        if (!empty($columns)) {
-            $this->query['orderBy'] = ' ORDER BY ' . implode(',', $columns) . ' ' . $way;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Build a 'limit' query
-     * 
-     * @param int $offet The query offset
-     * @param int $limit The query limit
-     */
-    protected function limit($offset = 0, $limit = 1) {
-
-        if ($limit > 0 and $offset >= 0) {
-            $this->query['limit'] = ' LIMIT ' . $offset . ', ' . $limit;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Flush query
-     * @return \BaseModel
-     */
-    public function flush() {
+    protected function flush() {
         $this->query = array(
             'select' => '',
             'from' => '',
@@ -328,6 +326,7 @@ abstract class BaseModel {
             'orderBy' => '',
             'limit' => '',
         );
+        
         return $this;
     }
 

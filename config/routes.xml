@@ -3,6 +3,7 @@
     <route pattern="/login" controller="user" action="login"/>
     <route pattern="/logout" controller="user" action="logout"/>
     <route pattern="/register" controller="user" action="register"/>
+    <route pattern="/activate/(.*)/(.*)" controller="user" action="activate" params="email,token"/>
     
     <route pattern="/" controller="dashboard" action="index" params="id" />
     <route pattern="/dashboard" controller="dashboard" action="index"/>
@@ -35,7 +36,6 @@
         
     <route pattern="/projects" controller="projects" action="index"/>
     <route pattern="/projects/add" controller="projects" action="add"/>
-    <route pattern="/projects/create" controller="projects" action="create"/>
     <route pattern="/projects/(\d+)/show" controller="projects" action="show" params="id" />
     <route pattern="/projects/(\d+)/edit" controller="projects" action="edit" params="id" />
     <route pattern="/projects/(\d+)/delete" controller="projects" action="delete" params="id" />

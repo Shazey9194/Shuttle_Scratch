@@ -6,13 +6,56 @@
         <div class="col-md-9">
             <section class="well">
                 <h3>Détail utilisateur</h3>
-                
-                <p>{{ user.email }}</p>
+
+                <div class="row">
+                    <div class="col-md-4">Email :</div>
+                    <div class="col-md-8"><p>{{ user.email }}</p></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">Nom complet :</div>
+                    <div class="col-md-8"><p>{{ user.firstname ~ ' ' ~ user.lastname }}</p></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">Rôles :</div>
+                    <div class="col-md-8"><p>{{ user.roles }}</p></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">Société :</div>
+                    <div class="col-md-8"><p>{{ user.company }}</p></div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-4">Inscris le :</div>
+                    <div class="col-md-8"><p>{{ user.registerDate|date('l, d F Y - H:i:s') }}</p></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">Dernière connexion le :</div>
+                    <div class="col-md-8"><p>{{ user.lastLoginDate|date('l, d F Y - H:i:s') }}</p></div>
+                </div>
             </section>
         </div>
         <div class="col-md-3">
             <a class="btn btn-lg btn-block btn-warning" href="{{ domain() }}user/{{ user.idUser }}/edit">Modifier</a>
             <a class="btn btn-lg btn-block btn-danger" href="{{ domain() }}user/{{ user.idUser }}/delete">Supprimer</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">        
+            <section class="well">
+                <h3>Participe aux tickets</h3>
+                <div class="alert alert-warning">
+                    <i class="fa-warning"></i>&nbsp;{{ user.firstname }} ne participe à aucun ticket
+                </div>
+
+            </section>
+        </div>
+        <div class="col-md-6">        
+            <section class="well">
+                <h3>Activité recente</h3>
+                <div class="alert alert-warning">
+                    <i class="fa-warning"></i>&nbsp;Aucune activité à signaler
+                </div>
+            </section>
         </div>
     </div>
 </div>

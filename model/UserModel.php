@@ -24,7 +24,7 @@ class UserModel extends BaseModel
      * @param type $password
      */
     public function authentificate($email, $password) {
-        $sql = $this->select(array('idUser', 'email', 'firstname', 'lastname', 'roles', 'state', 'company'))
+        $sql = $this->select(array('idUser', 'email', 'firstname', 'lastname', 'roles', 'state'))
                 ->where(array('email = :email', 'password = :password'))
                 ->buildQuery();
         $auth = $this->db->prepare($sql);
@@ -33,6 +33,34 @@ class UserModel extends BaseModel
         return $auth->fetch();
     }
 
+    /**
+     * 
+     * @param type $email
+     * @param type $token
+     * @return type
+     */
+    public function activate($email, $token) {
+        $sql = $this->select()
+                ->where(array('email = :email', 'token = :token', 'state = :state'))
+                ->buildQuery();
+        $auth = $this->db->prepare($sql);
+        $auth->execute(array(':email' => $email, ':token' => $token, ':state' => 0));
+
+        $user = $auth->fetch();
+
+        if (!empty($user)) {
+            $user['state'] = 1;
+            return $this->save($user);
+        } else {
+            return FALSE;
+        }
+    }
+
+    /**
+     * 
+     * @param type $email
+     * @return type
+     */
     public function existEmail($email) {
 
         $sql = $this->select(array('email'))

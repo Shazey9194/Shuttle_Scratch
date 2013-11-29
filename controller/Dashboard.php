@@ -1,13 +1,8 @@
 <?php
 
 require_once './Controller/BaseController.php';
-
-/**
- * The dasboard controller
- * 
- * @author Alex Maxime CADEVALL <a.cadevall@insta.fr>
- */
 require_once './Controller/BaseController.php';
+
 Session::run();
 
 class Dashboard extends BaseController {
