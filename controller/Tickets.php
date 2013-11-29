@@ -1,4 +1,5 @@
 <?php
+
 require_once './Controller/BaseController.php';
 
 /**
@@ -6,56 +7,64 @@ require_once './Controller/BaseController.php';
  * 
  * @author Alex Maxime CADEVALL <a.cadevall@insta.fr>
  */
-class Tickets extends BaseController{
+class Tickets extends BaseController
+{
+    /*
+     * Constructor
+     */
 
-	/*
-	 * Constructor
-	 */
-	public function __construct() {
-		parent::__construct();
-                Session::run();
-	}
+    public function __construct() {
+        parent::__construct();
+    }
 
-	/*
-	 * index view
-	 */
-	 public function index() {
-		 $this->twig->display('tickets/overview.html.twig');
-	 }
-	 
-	/*
-	 * create view
-	 */
-	public function create(){
-		$this->twig->display('tickets/create.html.twig');
-	}
+    /*
+     * index view
+     */
 
-	/*
-	 * show view
-	 */
-	public function show($idTicket) {
-		$this->twig->display('tickets/show.html.twig');
-	}
+    public function index() {
+        $this->restrict();
+        $this->twig->display('tickets/overview.html.twig');
+    }
 
-	/*
-	 * add view
-	 */
-	public function add() {
-		//do something
-	}
+    /*
+     * create view
+     */
 
-	/*
-	 * delete view
-	 */
-	public function delete($idTicket) {
-		//do something
-	}
+    public function create() {
+        $this->restrict('team');
+        $this->twig->display('tickets/create.html.twig');
+    }
 
-	/*
-	 * edit view
-	 */
-	public function edit($idTicket) {
-		//do something
-	}
+    /*
+     * show view
+     */
+
+    public function show($idTicket) {
+        $this->twig->display('tickets/show.html.twig');
+    }
+
+    /*
+     * add view
+     */
+
+    public function add() {
+        //do something
+    }
+
+    /*
+     * delete view
+     */
+
+    public function delete($idTicket) {
+        //do something
+    }
+
+    /*
+     * edit view
+     */
+
+    public function edit($idTicket) {
+        //do something
+    }
 
 }

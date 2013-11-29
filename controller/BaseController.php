@@ -1,6 +1,7 @@
 <?php
 
-require_once './vendor/twig/Autoloader.php';
+require_once './vendor/Twig/Autoloader.php';
+require_once './core/session.php';
 
 /**
  * The base controller
@@ -25,10 +26,33 @@ abstract class BaseController
     protected $model = null;
 
     /**
+     * The active session
+     * 
+     * @var \Session
+     */
+    protected $session;
+
+    /**
+     * The alerts messages
+     * 
+     * @var array
+     */
+    protected $alerts;
+
+    /**
      * Construct
      * 
+     * 0/ Open a session
+     * 1/ Load the default model if specified
+     * 2/ Build Twig environment
+     * 3/ Add flash messages to environment
+     * 4/ Extends Twig with personal fonctions
+     * 
+     * @param string $model The default entity model
      */
     protected function __construct($model = null) {
+
+        $this->session = new Session();
 
         if (null != $model) {
             require_once './model/' . $model . '.php';
@@ -39,7 +63,7 @@ abstract class BaseController
         $loader = new Twig_Loader_Filesystem('./view');
         $this->twig = new Twig_Environment($loader, array('debug' => true));
         $this->twig->addExtension(new Twig_Extension_Debug());
-
+        $this->twig->addGlobal('alerts', $this->session->getFlash());
         $this->extend();
     }
 
@@ -73,6 +97,7 @@ abstract class BaseController
      * Delete an entity from its id
      * 
      * @param int $id The entity id
+     * @return void
      */
     abstract public function delete($id);
 
@@ -83,8 +108,60 @@ abstract class BaseController
      * @param string $request The inner-domain request uri
      */
     protected function redirect($request) {
-        header('location: http://' . $_SERVER['SERVER_NAME'] . $request);
+        if (substr($request, 0, 7) == 'http://') {
+            header('location: ' . $request);
+        } else {
+            header('location: http://' . $_SERVER['SERVER_NAME'] . $request);
+        }
+        
         exit;
+    }
+
+    /**
+     * Restrict access to a logged user with specific role
+     * 
+     * 0/ Check if the required role is granted
+     * 1/ Add a flash message
+     * 2/ Redirect to the http_referer
+     * 
+     * @return void
+     */
+    protected function restrict($role = null) {
+        if (!$this->session->isGranted($role)) {
+            $this->session->addFlash('<div class="alert alert-danger"><i class="fa-minus-circle"></i>&nbsp;Cette action est interdite !</div>', 'danger');
+            $this->redirect($_SERVER['HTTP_REFERER']);
+        }
+    }
+
+    /**
+     * Create an alert message and allow Twig to access them
+     * 
+     * 0/ Look for the icon to use
+     * 1/ Build the alert message
+     * 2/ Update the Twig environment
+     * 
+     * @param string $message The alert message
+     * @param string $type The alert type
+     * @return string
+     */
+    protected function alert($message, $type = 'info') {
+        switch ($type) {
+            case 'success' :
+                $icon = 'fa-check-circle';
+                break;
+            case 'warning' :
+                $icon = 'fa-exclamation-triangle';
+                break;
+            case 'danger' :
+                $icon = 'fa-minus-circle';
+                break;
+            default :
+                $icon = 'fa-exclamation-circle';
+                $type = 'info';
+        }
+
+        $this->alerts[$type] = '<div class="alert alert-' . $type . '"><i class="' . $icon . '"></i>&nbsp;' . $message . '</div>';
+        $this->twig->addGlobal('alerts', $this->alerts);
     }
 
     /**

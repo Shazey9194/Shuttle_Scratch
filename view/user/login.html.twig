@@ -43,10 +43,10 @@
             </div>
         </div>
 
-        {% if hasError('badCredentials') %}
+        {% if hasError('credentials') %}
         <div class="row">
             <div class="col-md-offset-2 col-md-8">
-                <div class="input-error row-error">{{ formError('badCredentials', false) }}</div>
+                <div class="input-error row-error">{{ formError('credentials', false) }}</div>
             </div>
         </div>
         {% endif %}

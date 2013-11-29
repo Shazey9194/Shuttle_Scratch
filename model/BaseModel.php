@@ -130,6 +130,18 @@ abstract class BaseModel
 
     /**
      * 
+     * @param type $id
+     */
+    public function deleteById($id) {
+        
+        $sql = 'DELETE FROM ' . $this->table . ' WHERE ' . $this->primaryKey . ' = :id';
+        $deleteById = $this->db->prepare($sql);
+        
+        return $deleteById->execute(array(':id' => $id));
+    }
+
+    /**
+     * 
      * @param type $data
      * @param type $table
      */
@@ -301,6 +313,22 @@ abstract class BaseModel
             $this->query['limit'] = ' LIMIT ' . $offset . ', ' . $limit;
         }
 
+        return $this;
+    }
+    
+    /**
+     * 
+     */
+    protected function flush() {
+        $this->query = array(
+            'select' => '',
+            'from' => '',
+            'where' => '',
+            'join' => '',
+            'orderBy' => '',
+            'limit' => '',
+        );
+        
         return $this;
     }
 

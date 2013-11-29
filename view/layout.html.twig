@@ -69,7 +69,23 @@
             <div>&nbsp;</div>
         </div>
         {% endblock %}
-
+        
+        {% block alert %}
+        {% if alerts %}
+        <div id="alerts">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12">
+                    {% for alert in alerts %}
+                        {{ alert|raw }}
+                    {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endblock %}
+        
         <div id="content" class="animated">
         {% block content %}
             <!-- content -->
@@ -144,8 +160,8 @@
         {% endblock %}
 
         {% block scripts %}
-            <script src="{{ domain() }}asset/js/jquery.min.js"></script>
-            <script src="{{ domain() }}asset/js/bootstrap.min.js"></script>
+        <script src="{{ domain() }}asset/js/jquery.min.js"></script>
+        <script src="{{ domain() }}asset/js/bootstrap.min.js"></script>
         {% endblock %}
-        </body>
-    </html>
+    </body>
+</html>
