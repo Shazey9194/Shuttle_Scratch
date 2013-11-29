@@ -164,19 +164,12 @@ class User extends BaseController
      * @param int $idUser The entity id
      */
     public function delete($idUser) {
-<<<<<<< HEAD
 
         $this->restrict();
         $this->model->init();
         $this->model->deleteById($idUser);
         $this->model->close();
         $this->redirect('/user');
-=======
-        Session::run();
-		$this->model->init();
-        return true;//$this->model->deleteById($idUser);
-		$this->model->close();
->>>>>>> bd14fcb1dfea292273f73a30bd5d3d024e69af83
     }
 
     /**
