@@ -24,8 +24,7 @@ class User extends BaseController
      */
     public function index() {
 
-        Session::run();
-
+        $this->restrict();
         $this->model->init();
 
         $this->twig->display('user/users.html.twig', array(
@@ -56,20 +55,31 @@ class User extends BaseController
                 $this->model->init();
                 if (($user = $this->model->authentificate($email, $password)) != FALSE) {
 
-                    $user['roles'] = json_decode($user['roles']);
+                    if ($user['state'] == 1) {
 
-                    Session::startUserSession($user);
+                        $user['roles'] = json_decode($user['roles']);
 
-                    $this->redirect('/dashboard');
+                        $this->session->startUserSession($user);
+
+                        $this->model->close();
+                        $this->redirect('/dashboard');
+                        
+                    } elseif ($user['state'] == 0) {
+                        $validator->addCustomError('credentials', 'Accèder à votre boîte mail pour activer ce compte');
+                        
+                    } elseif ($user['state'] >= 2) {
+                        $validator->addCustomError('credentials', 'Ce compte n\'est plus autorisé à se connecter');
+                        
+                    }
+                } else {
+                    $validator->addCustomError('credentials', 'Identifiants incorrects');
                 }
-
-                $validator->addCustomError('badCredentials', 'Identifiants incorrects');
             }
         }
 
-
-
         $this->twig->display('user/login.html.twig');
+
+        $this->model->close();
     }
 
     /**
@@ -79,8 +89,7 @@ class User extends BaseController
      */
     public function show($idUser) {
 
-        Session::run();
-
+        $this->restrict();
         $this->model->init();
 
         $user = $this->model->loadById($idUser);
@@ -102,7 +111,12 @@ class User extends BaseController
      */
     public function edit($idUser) {
 
-        Session::run();
+        $this->restrict('admin');
+
+//        $userdata = $this->session->getUserData();
+//        if($idUser == $userdata['idUser']) {
+//            $this->alert('Vous modifiez votre propre compte !', 'warning');
+//        }
 
         $this->model->init();
 
@@ -129,10 +143,10 @@ class User extends BaseController
                     'roles' => json_encode($_POST['roles']),
                 );
 
-                if ($this->model->save($data)) { // sauvegarde utilisateur
-                    //success
+                if ($this->model->save($data)) {
+                    $this->alert('Utilisateur #' . $idUser . ' modifié', 'success');
                 } else {
-                    //erreur
+                    $this->alert('Impossible de sauvegarder les changements', 'danger');
                 }
             }
         }
@@ -150,10 +164,12 @@ class User extends BaseController
      * @param int $idUser The entity id
      */
     public function delete($idUser) {
-        Session::run();
-		$this->model->init();
-        return true;//$this->model->deleteById($idUser);
-		$this->model->close();
+
+        $this->restrict();
+        $this->model->init();
+        $this->model->deleteById($idUser);
+        $this->model->close();
+        $this->redirect('/user');
     }
 
     /**
@@ -161,7 +177,7 @@ class User extends BaseController
      */
     public function add() {
 
-        Session::run();
+        $this->restrict();
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST' and !empty($_POST)) {
 
@@ -174,9 +190,16 @@ class User extends BaseController
 
             if ($validator->run()) {
 
-                $data = array(); // donnees utilisateur
+                $data = array(
+                    'email' => ucwords(strtolower($_POST['email'])),
+                    'password' => $this->generatePassword(),
+                    'firstname' => ucwords(strtolower($_POST['firstname'])),
+                    'lastname' => strtoupper($_POST['lastname']),
+                    'roles' => json_encode($_POST['roles']),
+                    'company' => $_POST['company']
+                );
 
-                if (TRUE) { // sauvegarde utilisateur
+                if ($this->model->save($data)) {
                     //success
                 } else {
                     //erreur
@@ -192,7 +215,7 @@ class User extends BaseController
      */
     public function logout() {
 
-        Session::endUserSession();
+        $this->session->endUserSession();
 
         $this->redirect('/login');
     }
@@ -215,28 +238,61 @@ class User extends BaseController
 
                 $email = strtolower($_POST['email']);
                 $password = md5($_POST['password'] . $email);
+                $token = md5(uniqid($email));
 
                 $this->model->init();
 
-                $data = array(
+                $user = array(
                     'email' => $email,
-                    'password' => $password
+                    'password' => $password,
+                    'token' => $token
                 );
 
-                if ($this->model->save($data)) {
+                if ($this->model->save($user)) {
+
+                    require_once './core/mailer.php';
+                    $mailer = new Mailer();
+                    $mailer->mailRegister($email, $token, $this->twig);
+
                     $this->twig->display('info/registerSuccess.html.twig', array(
-                        'email' => $data['email']
+                        'email' => $email
                     ));
-                    
                 } else {
                     $this->twig->display('info/registerFailure.html.twig');
                 }
-                
+
                 exit;
             }
         }
 
         $this->twig->display('user/register.html.twig');
+    }
+
+    /**
+     * 
+     * @param type $email
+     * @param type $token
+     */
+    public function activate($email, $token) {
+        $this->model->init();
+        
+        if($this->model->activate($email, $token)) {
+            
+            $this->twig->display('info/msg.success.request.twig', array(
+                'view' => 'login',
+                'msg' => 'Votre compte a bien été activé.'
+            ));
+            
+        } else {
+            
+            $this->twig->display('info/msg.failure.request.twig', array(
+                'view' => 'login',
+                'msg' => 'Impossible d\'activer ce compte.'
+            ));
+            
+        }
+        
+        $this->model->close();
     }
 
 }

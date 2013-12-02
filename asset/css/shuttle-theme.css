@@ -11,13 +11,6 @@ body {
     background-attachment: fixed;
 }
 
-@media (min-width: 1601px) {
-    body.login {
-        background-size: 100% auto; 
-    }
-}
-
-
 h1, h2, h3, h4, h5, h6 {
     margin: 0;
     font-family: 'Open Sans','Tahoma';
@@ -143,7 +136,7 @@ section.well > h3 {
 #subnavbar ul {
     display: inline-block;
     padding: 0;
-    margin: 0;
+    margin: 0 0 0 20px;
     list-style: none;
     border-left: 1px solid #292929;
     border-right: 1px solid #4A4A4A;
@@ -468,39 +461,5 @@ body > footer a:hover {
     margin-top: 0;
     margin-bottom: 12px;
 }
-
-.page-header-min {
-    border-bottom-color: #EEEEEE;
-    border-bottom-style: solid;
-    border-bottom-width: 1px;
-    margin-bottom: 10px;
-    margin-left: 0;
-    margin-right: 0;
-    margin-top: 5px;
-    padding-bottom: 9px;
-}
-
-/*@media (min-width: 992px) {
-    .form-group { position: relative;}
-
-    .input-error {
-        margin-top: 0;
-        position: absolute;
-        width: 230px;
-        left: -250px;
-        top: 0;
-    }
-
-    .input-error:before {
-        content: '';
-        border-top: 6px solid transparent;
-        border-bottom: 6px solid transparent;
-        border-left: 6px solid rgba(200,0,0,0.5);;
-        position: absolute;
-        left: 230px;
-        top:6px;
-    }
-}*/
-
 
 /**/

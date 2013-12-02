@@ -117,7 +117,7 @@ class Validator
         foreach ($this->rules as $field => $rules) {
             $rules = explode('|', $rules);
 
-            if (isset($_POST[$field])) {
+            if (isset($_POST[$field]) and $_POST[$field] != '') {
                 $value = $_POST[$field];
 
                 foreach ($rules as $rule) {
@@ -130,7 +130,9 @@ class Validator
                 }
             } elseif (in_array('required', $rules)) {
                 $this->addError('required', $field);
-            }
+            } else {
+				
+			}
         }
 
         return empty($this->errors);
@@ -383,5 +385,13 @@ class Validator
             return FALSE;
         }
     }
+	
+	private function validdate ($value, $param) {
+		return preg_match('#^\d{2}\/\d{2}\/\d{4}$#', $value);
+	}
+	
+	public function getRules() {
+		return $this->rules;
+	}
 
 }

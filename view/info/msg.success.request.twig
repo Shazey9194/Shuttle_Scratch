@@ -1,4 +1,4 @@
-{% extends "layout.html.twig" %}
+{% extends "user/login.html.twig" %}
 
 {% block content %}
 <div class="container">
@@ -11,19 +11,19 @@
         <div class="row">
             <div class="col-md-offset-2 col-md-8">
                 <p>Votre <strong>{{ action|capitalize }}</strong> a bien été pris en compte</p>
-                <p>Tout c'est dérouler sans encombre, <a class="btn btn-primary btn-xs" href="{{ [domain(),view]|join('') }}" class="dynamic">Revenez sur la page précédente.</a></p>
+                <p>Tout c'est dérouler sans encombre, <a class="btn btn-primary btn-xs" href="{{ domain ~ view }}" class="dynamic">Revenez sur la page précédente.</a></p>
             </div>
-			<div class="form-group">
-				<div class="col-lg-offset-2 col-lg-8">
-					<div id="alertMsg" class="alert alert-info">{{ msg }}</div>
-				</div>
-			</div>
+            <div class="form-group">
+                <div class="col-lg-offset-2 col-lg-8">
+                    <div id="alertMsg" class="alert alert-info">{{ msg }}</div>
+                </div>
+            </div>
         </div>
         <div class="row">
             <div class="form-group col-xs-12" style="text-align: center;">
-                Retour sur <a href="{{ [domain(),view]|join('') }}" class="dynamic">{{ view|capitalize }}</a>
+                Retour sur <a href="{{ domain() ~ view }}" class="dynamic">{{ view|capitalize }}</a>
             </div>
-		</div>
+        </div>
         <div class="row">
             <div class="form-group col-xs-12" style="text-align: center;">
                 Besoin d'aide ? <a href="/help" class="dynamic">Contacter le support</a>
@@ -32,7 +32,5 @@
     </div>
 </div>
 {% endblock %}
-{% block extras %}
-<div id="home-demo">
-</div>
-{% endblock %}
+
+{% block extras %}{% endblock %}

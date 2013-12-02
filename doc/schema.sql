@@ -7,18 +7,6 @@ CREATE SCHEMA IF NOT EXISTS `Shuttle` DEFAULT CHARACTER SET utf8 COLLATE utf8_ge
 USE `Shuttle` ;
 
 -- -----------------------------------------------------
--- Table `Shuttle`.`Company`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `Shuttle`.`Company` ;
-
-CREATE  TABLE IF NOT EXISTS `Shuttle`.`Company` (
-  `idCompany` INT NOT NULL ,
-  `Name` VARCHAR(255) NOT NULL ,
-  PRIMARY KEY (`idCompany`) )
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `Shuttle`.`User`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `Shuttle`.`User` ;
@@ -32,19 +20,12 @@ CREATE  TABLE IF NOT EXISTS `Shuttle`.`User` (
   `roles` TEXT NULL ,
   `registerDate` DATETIME NULL ,
   `lastLoginDate` DATETIME NULL ,
-  `state` VARCHAR(45) NULL ,
-  `company` INT NULL ,
-  PRIMARY KEY (`idUser`) ,
-  CONSTRAINT `fk_User_Group1`
-    FOREIGN KEY (`company` )
-    REFERENCES `Shuttle`.`Company` (`idCompany` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  `state` INT NOT NULL DEFAULT 0 ,
+  `token` VARCHAR(255) NOT NULL ,
+  PRIMARY KEY (`idUser`) )
 ENGINE = InnoDB;
 
 CREATE UNIQUE INDEX `email_UNIQUE` ON `Shuttle`.`User` (`email` ASC) ;
-
-CREATE INDEX `fk_User_Group1_idx` ON `Shuttle`.`User` (`company` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -57,6 +38,18 @@ CREATE  TABLE IF NOT EXISTS `Shuttle`.`TicketType` (
   `label` VARCHAR(45) NULL ,
   `steps` TEXT NULL ,
   PRIMARY KEY (`idTicketType`) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Shuttle`.`Company`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `Shuttle`.`Company` ;
+
+CREATE  TABLE IF NOT EXISTS `Shuttle`.`Company` (
+  `idCompany` INT NOT NULL ,
+  `Name` VARCHAR(255) NOT NULL ,
+  PRIMARY KEY (`idCompany`) )
 ENGINE = InnoDB;
 
 
