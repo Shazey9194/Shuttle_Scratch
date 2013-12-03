@@ -103,12 +103,15 @@ class Session
     public function isGranted($role = null) {
 
         if (!empty($this->userdata)) {
-
             if ($role != null) {
+                if(!(is_null($this->userdata['roles'])))
+                {
                 return in_array($role, $this->userdata['roles']);
+                }else{
+                    return false;
+                }
             }
-
-            return TRUE;
+                return TRUE;
         } else {
             return FALSE;
         }

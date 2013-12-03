@@ -1,0 +1,68 @@
+{% extends "layout.html.twig" %}
+{% block title %}Enregistrement d'un projet{% endblock %}
+{% set navtab = 'projects' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <section class="well">
+                <h3>Nouveau Projet</h3>
+                <form class="form-well" role="form" method="post">
+                    <div class="form-group">
+                        <label for="name" class="control-label">Nom du projet</label>
+                        <input type="text" name="name" class="form-control" id="name" placeholder="Nouveau projet">
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label for="startDate">Date de debut</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="startDate" name="startDate" {{ setValue('startDate') }} />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" id="startDateBtn"><i class="fa-calendar-o"></i></button>
+                                    </span>
+                                </div>
+								{{ formError('startDate') }}
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="deadline"><b>Date de fin</b></label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="deadline" name="deadline" {{ setValue('deadline') }}/>
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-default" id="deadlineBtn"><i class="fa-calendar-o"></i></button>
+                                    </span>
+                                </div>
+								{{ formError('startDate') }}
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="estimatedTime"><b>Temps estimé</b></label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="estimatedTime" name="estimatedTime" {{ setValue('estimatedTime') }} />
+                                    <span class="input-group-addon">Jours</span>
+                                </div>
+                            </div>
+                        </div>
+               
+                        <input type="text" name="name" class="form-control" id="name" placeholder="Nouveau projet">
+                        <label for="name" class="control-label">Societe</label>
+                           <select class="form-control" id="company" name="company" {{ setValue('company') }}>
+                                <option value="">Choisir une compagnie</option>
+                               <select class="form-control" id="type" name="idCompany" {{ setValue('idCompany') }}>
+                        <option value="">Choisir une Société</option>
+						{% for company in companies %}
+                        <option value="{{ company.idCompany }}" {{ set_select('idCompany', company.idCompany) }}>{{ company.Name|capitalize }}</option>
+						{% endfor %}
+                    </select>
+					{{ formError('idProjet') }}
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+         <div class="col-md-3">
+        <a class="btn btn-lg btn-block btn-info" href="{{ domain() }}projects"><i class="fa-arrow-circle-o-left"></i>&nbsp;Retour liste projet</a>
+    </div>
+    </div>
+</div>
+{% endblock %}

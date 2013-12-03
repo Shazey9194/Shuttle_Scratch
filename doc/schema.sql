@@ -2,8 +2,8 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
-DROP SCHEMA IF EXISTS `Shuttle` ;
-CREATE SCHEMA IF NOT EXISTS `Shuttle` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
+DROP SCHEMA IF EXISTS `Shuttle2` ;
+CREATE SCHEMA IF NOT EXISTS `Shuttle2` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
 USE `Shuttle` ;
 
 -- -----------------------------------------------------
@@ -68,8 +68,8 @@ CREATE  TABLE IF NOT EXISTS `Shuttle`.`Project` (
   CONSTRAINT `fk_Project_company1`
     FOREIGN KEY (`company` )
     REFERENCES `Shuttle`.`Company` (`idCompany` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_Project_company1_idx` ON `Shuttle`.`Project` (`company` ASC) ;
@@ -99,23 +99,23 @@ CREATE  TABLE IF NOT EXISTS `Shuttle`.`Ticket` (
   CONSTRAINT `fk_Ticket_TicketType`
     FOREIGN KEY (`type` )
     REFERENCES `Shuttle`.`TicketType` (`idTicketType` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_Ticket_User2`
     FOREIGN KEY (`assignedTo` )
     REFERENCES `Shuttle`.`User` (`idUser` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_Ticket_Project1`
     FOREIGN KEY (`project` )
     REFERENCES `Shuttle`.`Project` (`idProject` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_Ticket_User1`
     FOREIGN KEY (`openBy` )
     REFERENCES `Shuttle`.`User` (`idUser` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_Ticket_TicketType_idx` ON `Shuttle`.`Ticket` (`type` ASC) ;

@@ -35,6 +35,7 @@
     <route pattern="/history/(\d+)/show" controller="history" action="show" params="id" />
         
     <route pattern="/projects" controller="projects" action="index"/>
+    <route pattern="/projects/create" controller="projects" action="add"/>
     <route pattern="/projects/add" controller="projects" action="add"/>
     <route pattern="/projects/(\d+)/show" controller="projects" action="show" params="id" />
     <route pattern="/projects/(\d+)/edit" controller="projects" action="edit" params="id" />

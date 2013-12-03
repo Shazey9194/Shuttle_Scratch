@@ -27,6 +27,7 @@ class User extends BaseController
         $this->restrict();
         $this->model->init();
 
+       
         $this->twig->display('user/users.html.twig', array(
             'users' => $this->model->loadAll()
         ));
@@ -51,7 +52,6 @@ class User extends BaseController
 
                 $email = strtolower($_POST['email']);
                 $password = md5($_POST['password'] . $email);
-
                 $this->model->init();
                 if (($user = $this->model->authentificate($email, $password)) != FALSE) {
 

@@ -58,7 +58,7 @@ class Tickets extends BaseController {
                     'closeDate' => null,
                     'percent' => 0,
                     'openBy' => $userdata['idUser'],
-                    'assignedTo' => $_POST['assignedTo'],
+                    'assignedTo' => 1,
                     'deadline' => $_POST['deadline'],
                     'estimatedTime' => $_POST['estimatedTime'],
                     'title' => $_POST['title'],
@@ -85,12 +85,19 @@ class Tickets extends BaseController {
         $projets = $this->model->loadProjectList();
         $this->model->flush();
         $teams = $this->model->loadMemberList();
+       
         $team = array();
+        if(!(is_null($teams)))
+        {
         for ($index = 0; $index < count($teams); $index++) {
             $roles = json_decode($teams[$index]['roles']);
+        if(!(is_null($roles)))
+        {
             if (in_array('team', $roles) || in_array('admin', $roles)) {
                 array_push($team, $teams[$index]);
             }
+        }
+        }
         }
         $data = array(
             'types' => $types,
